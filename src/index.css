@@ -1,0 +1,12 @@
+@import "tailwindcss";
+
+@theme {
+  --color-brand-bg: #090b10; /* The very dark blue background */
+  --color-brand-input: #1d212a; /* The dark gray input background */
+  --color-brand-pink: #d93b8c; /* The pink from the title/border */
+  --color-brand-blue: #009de0; /* The blue from the text/logo */
+}
+
+@utility text-brand-gradient {
+  @apply from-brand-pink to-brand-blue bg-linear-to-r bg-clip-text text-transparent;
+}
