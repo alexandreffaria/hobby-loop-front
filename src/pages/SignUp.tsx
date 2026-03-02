@@ -11,7 +11,6 @@ export function SignUp() {
 
   return (
     <div className="flex flex-col items-center">
-      {/* 1. Logo Section (Using a CSS gradient circle as a placeholder for your actual logo) */}
       <div className="mb-12 flex flex-col items-center">
         <div className="from-brand-pink to-brand-blue mb-2 h-10 w-10 rounded-full bg-linear-to-tr shadow-lg"></div>
         <span className="text-xs font-bold tracking-widest text-white">
@@ -19,13 +18,11 @@ export function SignUp() {
         </span>
       </div>
 
-      {/* 2. Title Area */}
       <h1 className="text-brand-gradient mb-8 text-xl font-bold">
         Crie sua conta
       </h1>
 
-      {/* 3. The Form Container */}
-      {/* divide-y and divide-gray-800 automatically put lines *between* the inputs, but not on the outside */}
+      {/* divide-y and divide-gray-799 automatically put lines *between* the inputs, but not on the outside */}
       <div className="border-brand-pink/60 bg-brand-input flex w-full flex-col divide-y divide-gray-800 overflow-hidden rounded-xl border shadow-2xl">
         {formFields.map((field) => (
           <input
@@ -38,7 +35,10 @@ export function SignUp() {
         ))}
       </div>
 
-      {/* 4. Footer Link */}
+      <button className="from-brand-pink to-brand-blue shadow-brand-pink/20 hover:shadow-brand-pink/40 mt-6 w-full rounded-xl bg-linear-to-r py-4 text-sm font-bold text-white shadow-lg transition-all hover:scale-[1.02] active:scale-[0.98]">
+        Criar conta
+      </button>
+
       <div className="mt-10">
         <button className="text-brand-blue text-sm transition-all hover:underline">
           Entrar com a conta Google
