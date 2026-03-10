@@ -41,7 +41,7 @@ export function CreateSubscription() {
 
   return (
     <div className="flex flex-col items-center">
-      <h1 className="text-brand-pink mb-8 text-xl font-bold">
+      <h1 className="text-brand-gradient mb-8 text-xl font-bold">
         Crie suas assinatura
       </h1>
 
