@@ -2,7 +2,7 @@ import { useState } from "react";
 import { SubscriptionCard } from "../components/SubscriptionCard";
 
 // 1. Strict Typing for the Statuses
-type DeliveryStatus = "em preparação" | "Enviado" | "Entregue";
+type DeliveryStatus = "Em preparação" | "Enviado" | "Entregue";
 
 interface Subscriber {
   id: string;
@@ -17,7 +17,7 @@ interface Subscriber {
 // Extracting this keeps the main page clean and allows easy mapping.
 function SubscriberRow({ data }: { data: Subscriber }) {
   const statusSteps: DeliveryStatus[] = [
-    "em preparação",
+    "Em preparação",
     "Enviado",
     "Entregue",
   ];
@@ -88,7 +88,7 @@ export function ManageSubscription() {
       name: "NOME DO ASSINANTE",
       duration: "Por 1 ano",
       frequency: "Mensalmente",
-      status: "em preparação",
+      status: "Em preparação",
       address: "Rua Flor de lotus\nN-456 CEP 93893899 FLN",
     },
   ]);
