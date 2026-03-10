@@ -4,6 +4,7 @@ import { Home } from "./pages/Home";
 import { Dashboard } from "./pages/Dashboard";
 import { AuthLayout } from "./layouts/AuthLayout";
 import { SignUp } from "./pages/SignUp";
+import { CreateSubscription } from "./pages/CreateSubscription";
 
 const router = createBrowserRouter([
   {
@@ -24,6 +25,12 @@ const router = createBrowserRouter([
   {
     element: <AuthLayout />,
     children: [{ path: "/signup", element: <SignUp /> }],
+  },
+  {
+    element: <AuthLayout />,
+    children: [
+      { path: "/create-subscription", element: <CreateSubscription /> },
+    ],
   },
 ]);
 
