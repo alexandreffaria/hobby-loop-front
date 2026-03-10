@@ -6,6 +6,7 @@ import { AuthLayout } from "./layouts/AuthLayout";
 import { SignUp } from "./pages/SignUp";
 import { CreateSubscription } from "./pages/CreateSubscription";
 import { PaymentDetails } from "./pages/PaymentDetails";
+import { MySubscriptions } from "./pages/MySubscription";
 
 const router = createBrowserRouter([
   {
@@ -38,6 +39,11 @@ const router = createBrowserRouter([
   {
     element: <AuthLayout />,
     children: [{ path: "/payment", element: <PaymentDetails /> }],
+  },
+
+  {
+    element: <AuthLayout />,
+    children: [{ path: "/my-subscriptions", element: <MySubscriptions /> }],
   },
 ]);
 
