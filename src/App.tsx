@@ -9,6 +9,7 @@ import { PaymentDetails } from "./pages/PaymentDetails";
 import { MySubscriptions } from "./pages/MySubscription";
 import { PromotionalBanner } from "./pages/PromotionalBanner";
 import { ManageSubscription } from "./pages/ManageSubscription";
+import { SubscriberCheckout } from "./pages/SubscriberCheckout";
 
 const router = createBrowserRouter([
   {
@@ -56,6 +57,11 @@ const router = createBrowserRouter([
   {
     element: <AuthLayout />,
     children: [{ path: "/manage", element: <ManageSubscription /> }],
+  },
+
+  {
+    element: <AuthLayout />,
+    children: [{ path: "/checkout", element: <SubscriberCheckout /> }],
   },
 ]);
 
