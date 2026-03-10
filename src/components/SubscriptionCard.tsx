@@ -6,7 +6,8 @@ interface SubscriptionCardProps {
   price: string;
   duration: string;
   link: string;
-  isEmpty?: boolean; // To handle that empty dark card in your design
+  isEmpty?: boolean;
+  hideAction?: boolean;
 }
 
 export function SubscriptionCard({
@@ -16,6 +17,7 @@ export function SubscriptionCard({
   duration,
   link,
   isEmpty,
+  hideAction,
 }: SubscriptionCardProps) {
   // If it's the empty placeholder card
   if (isEmpty) {
@@ -70,10 +72,12 @@ export function SubscriptionCard({
       </div>
 
       {/* 2. Share Button */}
-      <button className="flex w-full items-center justify-center gap-2 rounded-full bg-blue-600 py-2 text-xs font-bold text-white shadow-lg transition-transform active:scale-95">
-        Compartilhar
-        <span className="text-[10px]">✈</span>
-      </button>
+      {!hideAction && (
+        <button className="flex w-full items-center justify-center gap-2 rounded-full bg-blue-600 py-2 text-xs font-bold text-white shadow-lg transition-transform active:scale-95">
+          Compartilhar
+          <span className="text-[10px]">✈</span>
+        </button>
+      )}
     </div>
   );
 }

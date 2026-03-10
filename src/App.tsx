@@ -7,6 +7,8 @@ import { SignUp } from "./pages/SignUp";
 import { CreateSubscription } from "./pages/CreateSubscription";
 import { PaymentDetails } from "./pages/PaymentDetails";
 import { MySubscriptions } from "./pages/MySubscription";
+import { PromotionalBanner } from "./pages/PromotionalBanner";
+import { ManageSubscription } from "./pages/ManageSubscription";
 
 const router = createBrowserRouter([
   {
@@ -44,6 +46,16 @@ const router = createBrowserRouter([
   {
     element: <AuthLayout />,
     children: [{ path: "/my-subscriptions", element: <MySubscriptions /> }],
+  },
+
+  {
+    element: <AuthLayout />,
+    children: [{ path: "/banner", element: <PromotionalBanner /> }],
+  },
+
+  {
+    element: <AuthLayout />,
+    children: [{ path: "/manage", element: <ManageSubscription /> }],
   },
 ]);
 
