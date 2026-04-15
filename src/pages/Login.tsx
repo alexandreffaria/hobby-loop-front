@@ -5,14 +5,13 @@ import axios from 'axios'
 import * as authService from '../services/auth.service'
 import { setToken } from '../lib/token'
 
-export function SignUp() {
+export function Login() {
   const navigate = useNavigate()
-  const [name, setName] = useState('')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
 
   const mutation = useMutation({
-    mutationFn: () => authService.register({ name, email, password }),
+    mutationFn: () => authService.login({ email, password }),
     onSuccess: (data) => {
       setToken(data.token)
       navigate('/dashboard')
@@ -20,7 +19,7 @@ export function SignUp() {
   })
 
   const handleSubmit = () => {
-    if (!name || !email || !password) return
+    if (!email || !password) return
     mutation.mutate()
   }
 
@@ -34,32 +33,10 @@ export function SignUp() {
       </div>
 
       <h1 className="text-brand-gradient mb-8 text-xl font-bold">
-        Crie sua conta
+        Entrar na sua conta
       </h1>
 
       <div className="border-brand-pink/60 bg-brand-input flex w-full flex-col divide-y divide-gray-800 overflow-hidden rounded-xl border shadow-2xl">
-        <input
-          type="text"
-          placeholder="Seu nome"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-          className="w-full bg-transparent p-4 text-sm text-gray-200 placeholder-gray-400 transition-colors outline-none focus:bg-white/5"
-        />
-        <input
-          type="text"
-          placeholder="Sua empresa"
-          className="w-full bg-transparent p-4 text-sm text-gray-200 placeholder-gray-400 transition-colors outline-none focus:bg-white/5"
-        />
-        <input
-          type="text"
-          placeholder="CNPJ"
-          className="w-full bg-transparent p-4 text-sm text-gray-200 placeholder-gray-400 transition-colors outline-none focus:bg-white/5"
-        />
-        <input
-          type="text"
-          placeholder="Telefone"
-          className="w-full bg-transparent p-4 text-sm text-gray-200 placeholder-gray-400 transition-colors outline-none focus:bg-white/5"
-        />
         <input
           type="email"
           placeholder="E-mail"
@@ -68,15 +45,11 @@ export function SignUp() {
           className="w-full bg-transparent p-4 text-sm text-gray-200 placeholder-gray-400 transition-colors outline-none focus:bg-white/5"
         />
         <input
-          type="text"
-          placeholder="Endereço"
-          className="w-full bg-transparent p-4 text-sm text-gray-200 placeholder-gray-400 transition-colors outline-none focus:bg-white/5"
-        />
-        <input
           type="password"
           placeholder="Senha"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
+          onKeyDown={(e) => e.key === 'Enter' && handleSubmit()}
           className="w-full bg-transparent p-4 text-sm text-gray-200 placeholder-gray-400 transition-colors outline-none focus:bg-white/5"
         />
       </div>
@@ -84,8 +57,8 @@ export function SignUp() {
       {mutation.isError && (
         <p className="mt-3 text-sm text-red-400">
           {axios.isAxiosError(mutation.error)
-            ? (mutation.error.response?.data?.error ?? 'Erro ao criar conta. Tente novamente.')
-            : 'Erro ao criar conta. Tente novamente.'}
+            ? (mutation.error.response?.data?.error ?? 'E-mail ou senha inválidos.')
+            : 'E-mail ou senha inválidos.'}
         </p>
       )}
 
@@ -94,21 +67,15 @@ export function SignUp() {
         disabled={mutation.isPending}
         className="from-brand-pink to-brand-blue shadow-brand-pink/20 hover:shadow-brand-pink/40 mt-6 w-full rounded-xl bg-linear-to-r py-4 text-sm font-bold text-white shadow-lg transition-all hover:scale-[1.02] active:scale-[0.98] disabled:opacity-60 disabled:cursor-not-allowed"
       >
-        {mutation.isPending ? 'Criando conta...' : 'Criar conta'}
+        {mutation.isPending ? 'Entrando...' : 'Entrar'}
       </button>
 
-      <div className="mt-6">
+      <div className="mt-10">
         <button
-          onClick={() => navigate('/login')}
+          onClick={() => navigate('/signup')}
           className="text-brand-blue text-sm transition-all hover:underline"
         >
-          Já tem uma conta? Entrar
-        </button>
-      </div>
-
-      <div className="mt-4">
-        <button className="text-brand-blue text-sm transition-all hover:underline">
-          Entrar com a conta Google
+          Não tem conta? Criar conta
         </button>
       </div>
     </div>

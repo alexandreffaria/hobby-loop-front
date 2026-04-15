@@ -1,6 +1,7 @@
-import { Outlet, Link } from "react-router-dom";
+import { Outlet, Link, useNavigate } from "react-router-dom";
 
 export function MainLayout() {
+  const navigate = useNavigate()
   return (
     <div className="flex min-h-screen flex-col bg-gray-50 font-sans text-gray-900">
       {/* Top Navbar */}
@@ -18,7 +19,10 @@ export function MainLayout() {
           >
             Dashboard
           </Link>
-          <button className="rounded-lg bg-indigo-600 px-4 py-2 text-white shadow-sm transition-colors hover:bg-indigo-700">
+          <button
+            onClick={() => navigate('/login')}
+            className="rounded-lg bg-indigo-600 px-4 py-2 text-white shadow-sm transition-colors hover:bg-indigo-700"
+          >
             Log in
           </button>
         </div>

@@ -4,6 +4,7 @@ import { Home } from "./pages/Home";
 import { Dashboard } from "./pages/Dashboard";
 import { AuthLayout } from "./layouts/AuthLayout";
 import { SignUp } from "./pages/SignUp";
+import { Login } from "./pages/Login";
 import { CreateSubscription } from "./pages/CreateSubscription";
 import { PaymentDetails } from "./pages/PaymentDetails";
 import { MySubscriptions } from "./pages/MySubscription";
@@ -30,6 +31,11 @@ const router = createBrowserRouter([
   {
     element: <AuthLayout />,
     children: [{ path: "/signup", element: <SignUp /> }],
+  },
+
+  {
+    element: <AuthLayout />,
+    children: [{ path: "/login", element: <Login /> }],
   },
 
   {
