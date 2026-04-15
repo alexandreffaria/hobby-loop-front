@@ -5,6 +5,7 @@ import { Dashboard } from "./pages/Dashboard";
 import { AuthLayout } from "./layouts/AuthLayout";
 import { SignUp } from "./pages/SignUp";
 import { Login } from "./pages/Login";
+import { Subscriptions } from "./pages/Subscriptions";
 import { CreateSubscription } from "./pages/CreateSubscription";
 import { PaymentDetails } from "./pages/PaymentDetails";
 import { MySubscriptions } from "./pages/MySubscription";
@@ -24,6 +25,10 @@ const router = createBrowserRouter([
       {
         path: "/dashboard", // Renders Dashboard inside the Layout's <Outlet />
         element: <Dashboard />,
+      },
+      {
+        path: "/subscriptions",
+        element: <Subscriptions />,
       },
     ],
   },
