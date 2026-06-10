@@ -27,12 +27,7 @@ export const listSubscriptions = (): Promise<Subscription[]> =>
 export const createSubscription = (body: CreateSubscriptionRequest): Promise<Subscription> =>
   api.post<{ data: Subscription }>('/api/v1/subscriptions', body).then((r) => r.data.data)
 
-export interface UpdateSubscriptionRequest {
-  name: string
-  description: string
-  price_cents: number
-  product_ids: string[]
-}
+export type UpdateSubscriptionRequest = CreateSubscriptionRequest
 
 export const getSubscription = (id: string): Promise<Subscription> =>
   api.get<{ data: Subscription }>(`/api/v1/subscriptions/${id}`).then((r) => r.data.data)

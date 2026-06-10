@@ -3,8 +3,7 @@ import { Link, useNavigate, useParams } from 'react-router-dom'
 import { useMutation, useQuery } from '@tanstack/react-query'
 import axios from 'axios'
 import { listProducts } from '../services/product.service'
-import { getSubscription, updateSubscription } from '../services/subscription.service'
-import type { UpdateSubscriptionRequest } from '../services/subscription.service'
+import { getSubscription, updateSubscription, type UpdateSubscriptionRequest } from '../services/subscription.service'
 import { queryClient } from '../lib/queryClient'
 
 function parsePriceCents(raw: string): number {
@@ -29,6 +28,7 @@ export function EditSubscription() {
   const { data: subscription } = useQuery({
     queryKey: ['subscriptions', id],
     queryFn: () => getSubscription(id!),
+    enabled: !!id,
   })
 
   useEffect(() => {
@@ -105,12 +105,14 @@ export function EditSubscription() {
         </h1>
       </div>
 
+      <form onSubmit={(e) => { e.preventDefault(); handleSubmit() }}>
       <div className="bg-brand-input overflow-hidden rounded-2xl border border-white/10 shadow-2xl">
         <div className="border-b border-white/5 px-5 py-4">
-          <label className="mb-1.5 block text-[11px] font-medium tracking-widest text-gray-500 uppercase">
+          <label htmlFor="edit-name" className="mb-1.5 block text-[11px] font-medium tracking-widest text-gray-500 uppercase">
             Nome da assinatura
           </label>
           <input
+            id="edit-name"
             type="text"
             value={name}
             onChange={(e) => setName(e.target.value)}
@@ -146,10 +148,11 @@ export function EditSubscription() {
         </div>
 
         <div className="border-b border-white/5 px-5 py-4">
-          <label className="mb-1.5 block text-[11px] font-medium tracking-widest text-gray-500 uppercase">
+          <label htmlFor="edit-description" className="mb-1.5 block text-[11px] font-medium tracking-widest text-gray-500 uppercase">
             Descrição
           </label>
           <textarea
+            id="edit-description"
             rows={2}
             value={description}
             onChange={(e) => setDescription(e.target.value)}
@@ -159,12 +162,13 @@ export function EditSubscription() {
         </div>
 
         <div className="px-5 py-4">
-          <label className="mb-1.5 block text-[11px] font-medium tracking-widest text-gray-500 uppercase">
+          <label htmlFor="edit-price" className="mb-1.5 block text-[11px] font-medium tracking-widest text-gray-500 uppercase">
             Valor da assinatura
           </label>
           <div className="flex items-baseline gap-1">
             <span className="text-xs text-gray-500">R$</span>
             <input
+              id="edit-price"
               type="text"
               value={priceStr}
               onChange={(e) => setPriceStr(e.target.value)}
@@ -182,12 +186,13 @@ export function EditSubscription() {
       )}
 
       <button
-        onClick={handleSubmit}
-        disabled={mutation.isPending}
+        type="submit"
+        disabled={mutation.isPending || !initialized}
         className="from-brand-pink to-brand-blue mt-6 w-full rounded-xl bg-linear-to-r py-4 text-sm font-bold text-white shadow-lg transition-all hover:scale-[1.02] hover:shadow-xl active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-60"
       >
         {mutation.isPending ? 'Salvando...' : 'Salvar alterações →'}
       </button>
+      </form>
     </div>
   )
 }
