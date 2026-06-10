@@ -18,7 +18,8 @@ export function ManageSubscription() {
   const deleteMutation = useMutation({
     mutationFn: () => deleteSubscription(id!),
     onSuccess: async () => {
-      await queryClient.invalidateQueries({ queryKey: ['subscriptions'] })
+      queryClient.removeQueries({ queryKey: ['subscriptions', id] })
+      await queryClient.invalidateQueries({ queryKey: ['subscriptions'], exact: true })
       navigate('/subscriptions')
     },
   })
