@@ -73,7 +73,10 @@ export function PlanCard({ id, name, description, priceCents, onEdit, onManage }
       {/* Outer dark shell */}
       <div
         className="bg-brand-input relative w-full overflow-hidden rounded-[40px] border border-white/10 shadow-2xl transition-transform duration-200 hover:scale-[1.02] cursor-pointer"
+        role="button"
+        tabIndex={0}
         onClick={onManage}
+        onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') onManage() }}
         onMouseEnter={() => setHovered(true)}
         onMouseLeave={() => setHovered(false)}
       >
