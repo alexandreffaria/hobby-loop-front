@@ -4,6 +4,11 @@ export interface RegisterRequest {
   name: string
   email: string
   password: string
+  company: string
+  tax_id: string
+  tax_id_type: 'CPF' | 'CNPJ'
+  phone: string
+  address: string
 }
 
 export interface LoginRequest {
@@ -15,6 +20,11 @@ export interface AuthUser {
   id: string
   name: string
   email: string
+  company: string
+  tax_id: string
+  tax_id_type: 'CPF' | 'CNPJ'
+  phone: string
+  address: string
 }
 
 export interface AuthResponse {

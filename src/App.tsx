@@ -1,9 +1,8 @@
-import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import { Navigate, createBrowserRouter, RouterProvider } from "react-router-dom";
 import { MainLayout } from "./layouts/MainLayout";
-import { Home } from "./pages/Home";
 import { Dashboard } from "./pages/Dashboard";
 import { AuthLayout } from "./layouts/AuthLayout";
-import { SignUp } from "./pages/SignUp";
+import { Register } from "./pages/Register";
 import { Login } from "./pages/Login";
 import { Subscriptions } from "./pages/Subscriptions";
 import { CreateSubscription } from "./pages/CreateSubscription";
@@ -16,63 +15,29 @@ import { SubscriberCheckout } from "./pages/SubscriberCheckout";
 const router = createBrowserRouter([
   {
     path: "/",
-    element: <MainLayout />, // The Layout wraps everything
+    element: <Navigate to="/login" replace />,
+  },
+
+  {
+    element: <MainLayout />,
     children: [
-      {
-        path: "/", // The default page inside the layout
-        element: <Home />,
-      },
-      {
-        path: "/dashboard", // Renders Dashboard inside the Layout's <Outlet />
-        element: <Dashboard />,
-      },
-      {
-        path: "/subscriptions",
-        element: <Subscriptions />,
-      },
+      { path: "/dashboard", element: <Dashboard /> },
+      { path: "/subscriptions", element: <Subscriptions /> },
     ],
   },
 
   {
     element: <AuthLayout />,
-    children: [{ path: "/signup", element: <SignUp /> }],
-  },
-
-  {
-    element: <AuthLayout />,
-    children: [{ path: "/login", element: <Login /> }],
-  },
-
-  {
-    element: <AuthLayout />,
     children: [
+      { path: "/login", element: <Login /> },
+      { path: "/register", element: <Register /> },
       { path: "/create-subscription", element: <CreateSubscription /> },
+      { path: "/payment", element: <PaymentDetails /> },
+      { path: "/my-subscriptions", element: <MySubscriptions /> },
+      { path: "/banner", element: <PromotionalBanner /> },
+      { path: "/manage", element: <ManageSubscription /> },
+      { path: "/checkout", element: <SubscriberCheckout /> },
     ],
-  },
-
-  {
-    element: <AuthLayout />,
-    children: [{ path: "/payment", element: <PaymentDetails /> }],
-  },
-
-  {
-    element: <AuthLayout />,
-    children: [{ path: "/my-subscriptions", element: <MySubscriptions /> }],
-  },
-
-  {
-    element: <AuthLayout />,
-    children: [{ path: "/banner", element: <PromotionalBanner /> }],
-  },
-
-  {
-    element: <AuthLayout />,
-    children: [{ path: "/manage", element: <ManageSubscription /> }],
-  },
-
-  {
-    element: <AuthLayout />,
-    children: [{ path: "/checkout", element: <SubscriberCheckout /> }],
   },
 ]);
 

@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { useMutation } from '@tanstack/react-query'
 import axios from 'axios'
 import * as authService from '../services/auth.service'
@@ -25,24 +25,26 @@ export function Login() {
 
   return (
     <div className="flex flex-col items-center">
-      <div className="mb-12 flex flex-col items-center">
-        <div className="from-brand-pink to-brand-blue mb-2 h-10 w-10 rounded-full bg-linear-to-tr shadow-lg"></div>
-        <span className="text-xs font-bold tracking-widest text-white">
+      {/* Logo */}
+      <div className="mb-10 flex flex-col items-center gap-2">
+        <div className="from-brand-pink to-brand-blue h-12 w-12 rounded-full bg-linear-to-tr shadow-lg" />
+        <span className="text-xs font-bold tracking-widest text-white/70 uppercase">
           Hoby Loop
         </span>
       </div>
 
-      <h1 className="text-brand-gradient mb-8 text-xl font-bold">
-        Entrar na sua conta
+      <h1 className="text-brand-gradient mb-8 text-xl font-bold tracking-tight">
+        Bem-vindo de volta
       </h1>
 
-      <div className="border-brand-pink/60 bg-brand-input flex w-full flex-col divide-y divide-gray-800 overflow-hidden rounded-xl border shadow-2xl">
+      {/* Fields */}
+      <div className="border-brand-pink/60 bg-brand-input w-full overflow-hidden rounded-xl border shadow-2xl">
         <input
           type="email"
           placeholder="E-mail"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
-          className="w-full bg-transparent p-4 text-sm text-gray-200 placeholder-gray-400 transition-colors outline-none focus:bg-white/5"
+          className="w-full border-b border-gray-700/60 bg-transparent p-4 text-sm text-gray-200 placeholder-gray-500 outline-none transition-colors focus:bg-white/5"
         />
         <input
           type="password"
@@ -50,7 +52,7 @@ export function Login() {
           value={password}
           onChange={(e) => setPassword(e.target.value)}
           onKeyDown={(e) => e.key === 'Enter' && handleSubmit()}
-          className="w-full bg-transparent p-4 text-sm text-gray-200 placeholder-gray-400 transition-colors outline-none focus:bg-white/5"
+          className="w-full bg-transparent p-4 text-sm text-gray-200 placeholder-gray-500 outline-none transition-colors focus:bg-white/5"
         />
       </div>
 
@@ -65,19 +67,26 @@ export function Login() {
       <button
         onClick={handleSubmit}
         disabled={mutation.isPending}
-        className="from-brand-pink to-brand-blue shadow-brand-pink/20 hover:shadow-brand-pink/40 mt-6 w-full rounded-xl bg-linear-to-r py-4 text-sm font-bold text-white shadow-lg transition-all hover:scale-[1.02] active:scale-[0.98] disabled:opacity-60 disabled:cursor-not-allowed"
+        className="from-brand-pink to-brand-blue mt-6 w-full rounded-xl bg-linear-to-r py-4 text-sm font-bold text-white shadow-lg transition-all hover:scale-[1.02] hover:shadow-xl active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-60"
       >
         {mutation.isPending ? 'Entrando...' : 'Entrar'}
       </button>
 
-      <div className="mt-10">
-        <button
-          onClick={() => navigate('/signup')}
-          className="text-brand-blue text-sm transition-all hover:underline"
-        >
-          Não tem conta? Criar conta
-        </button>
-      </div>
+      {/* Google button (non-functional) */}
+      <button
+        type="button"
+        disabled
+        className="mt-4 w-full rounded-xl border border-gray-700 bg-transparent py-3.5 text-sm text-gray-400 transition-colors hover:border-gray-500 hover:text-gray-300 disabled:cursor-not-allowed"
+      >
+        Entrar com a conta Google
+      </button>
+
+      <p className="mt-8 text-sm text-gray-500">
+        Não tem conta?{' '}
+        <Link to="/register" className="text-brand-blue hover:underline">
+          Cadastre-se
+        </Link>
+      </p>
     </div>
   )
 }
