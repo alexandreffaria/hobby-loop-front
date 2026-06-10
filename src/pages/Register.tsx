@@ -27,9 +27,9 @@ export function Register() {
         email,
         password,
         company,
-        tax_id: taxId,
+        tax_id: taxId.replace(/\D/g, ''),
         tax_id_type: taxIdType,
-        phone,
+        phone: phone.replace(/\D/g, ''),
         address,
       }),
     onSuccess: (data) => {
@@ -42,6 +42,16 @@ export function Register() {
     setClientError('')
     if (!name || !company || !taxId || !phone || !email || !address || !password || !confirmPassword) {
       setClientError('Preencha todos os campos.')
+      return
+    }
+    const rawTaxId = taxId.replace(/\D/g, '')
+    const expectedTaxIdLen = taxIdType === 'CPF' ? 11 : 14
+    if (rawTaxId.length !== expectedTaxIdLen) {
+      setClientError(`${taxIdType} incompleto.`)
+      return
+    }
+    if (phone.replace(/\D/g, '').length !== 11) {
+      setClientError('Telefone incompleto.')
       return
     }
     if (password.length < 8) {

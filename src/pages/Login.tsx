@@ -9,6 +9,7 @@ export function Login() {
   const navigate = useNavigate()
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
+  const [clientError, setClientError] = useState('')
 
   const mutation = useMutation({
     mutationFn: () => authService.login({ email, password }),
@@ -19,7 +20,11 @@ export function Login() {
   })
 
   const handleSubmit = () => {
-    if (!email || !password) return
+    setClientError('')
+    if (!email || !password) {
+      setClientError('Preencha todos os campos.')
+      return
+    }
     mutation.mutate()
   }
 
@@ -56,11 +61,12 @@ export function Login() {
         />
       </div>
 
-      {mutation.isError && (
+      {(clientError || mutation.isError) && (
         <p className="mt-3 text-sm text-red-400">
-          {axios.isAxiosError(mutation.error)
-            ? (mutation.error.response?.data?.error ?? 'E-mail ou senha inválidos.')
-            : 'E-mail ou senha inválidos.'}
+          {clientError ||
+            (axios.isAxiosError(mutation.error)
+              ? (mutation.error.response?.data?.error ?? 'E-mail ou senha inválidos.')
+              : 'E-mail ou senha inválidos.')}
         </p>
       )}
 
