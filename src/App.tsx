@@ -35,7 +35,7 @@ const router = createBrowserRouter([
         element: <DarkLayout />,
         children: [
           { path: '/subscriptions', element: <Subscriptions /> },
-          { path: '/create-subscription', element: <CreateSubscription /> },
+          { path: '/subscriptions/new', element: <CreateSubscription /> },
           { path: '/payment', element: <PaymentDetails /> },
           { path: '/my-subscriptions', element: <MySubscriptions /> },
           { path: '/banner', element: <PromotionalBanner /> },

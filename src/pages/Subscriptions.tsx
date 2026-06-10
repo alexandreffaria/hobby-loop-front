@@ -36,8 +36,8 @@ export function Subscriptions() {
       </h1>
 
       {isError && (
-        <div className="flex flex-col items-center gap-3 py-12">
-          <p className="text-sm text-gray-400">Erro ao carregar assinaturas.</p>
+        <div className="mb-6 flex items-center justify-between rounded-xl border border-red-500/20 bg-red-500/10 px-4 py-3">
+          <p className="text-sm text-red-400">Erro ao carregar assinaturas.</p>
           <button
             onClick={() => refetch()}
             className="text-brand-blue text-sm underline hover:no-underline"
@@ -47,33 +47,31 @@ export function Subscriptions() {
         </div>
       )}
 
-      {!isError && (
-        <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
-          {isPending && (
-            <>
-              <SkeletonCard />
-              <SkeletonCard />
-              <SkeletonCard />
-              <SkeletonCard />
-            </>
-          )}
+      <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
+        {isPending && (
+          <>
+            <SkeletonCard />
+            <SkeletonCard />
+            <SkeletonCard />
+            <SkeletonCard />
+          </>
+        )}
 
-          {subscriptions?.map((sub) => (
-            <PlanCard
-              key={sub.id}
-              id={sub.id}
-              name={sub.name}
-              description={sub.description}
-              priceCents={sub.price_cents}
-              onEdit={() => navigate(`/manage/${sub.id}`)}
-            />
-          ))}
+        {subscriptions?.map((sub) => (
+          <PlanCard
+            key={sub.id}
+            id={sub.id}
+            name={sub.name}
+            description={sub.description}
+            priceCents={sub.price_cents}
+            onEdit={() => navigate(`/manage/${sub.id}`)}
+          />
+        ))}
 
-          {!isPending && (
-            <AddSlotCard onClick={() => navigate('/create-subscription')} />
-          )}
-        </div>
-      )}
+        {!isPending && (
+          <AddSlotCard onClick={() => navigate('/subscriptions/new')} />
+        )}
+      </div>
     </div>
   )
 }
