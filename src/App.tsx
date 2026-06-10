@@ -1,7 +1,9 @@
 import { Navigate, createBrowserRouter, RouterProvider } from "react-router-dom";
 import { MainLayout } from "./layouts/MainLayout";
-import { Dashboard } from "./pages/Dashboard";
 import { AuthLayout } from "./layouts/AuthLayout";
+import { DarkLayout } from "./layouts/DarkLayout";
+import { ProtectedRoute } from "./components/ProtectedRoute";
+import { Dashboard } from "./pages/Dashboard";
 import { Register } from "./pages/Register";
 import { Login } from "./pages/Login";
 import { Subscriptions } from "./pages/Subscriptions";
@@ -18,25 +20,44 @@ const router = createBrowserRouter([
     element: <Navigate to="/login" replace />,
   },
 
-  {
-    element: <MainLayout />,
-    children: [
-      { path: "/dashboard", element: <Dashboard /> },
-      { path: "/subscriptions", element: <Subscriptions /> },
-    ],
-  },
-
+  // Auth pages — centered card layout, no authentication required
   {
     element: <AuthLayout />,
     children: [
       { path: "/login", element: <Login /> },
       { path: "/register", element: <Register /> },
-      { path: "/create-subscription", element: <CreateSubscription /> },
-      { path: "/payment", element: <PaymentDetails /> },
-      { path: "/my-subscriptions", element: <MySubscriptions /> },
-      { path: "/banner", element: <PromotionalBanner /> },
-      { path: "/manage", element: <ManageSubscription /> },
-      { path: "/checkout", element: <SubscriberCheckout /> },
+    ],
+  },
+
+  // Light-themed app pages — require authentication
+  {
+    element: <ProtectedRoute />,
+    children: [
+      {
+        element: <MainLayout />,
+        children: [
+          { path: "/dashboard", element: <Dashboard /> },
+          { path: "/subscriptions", element: <Subscriptions /> },
+        ],
+      },
+    ],
+  },
+
+  // Dark-themed app pages — require authentication
+  {
+    element: <ProtectedRoute />,
+    children: [
+      {
+        element: <DarkLayout />,
+        children: [
+          { path: "/create-subscription", element: <CreateSubscription /> },
+          { path: "/payment", element: <PaymentDetails /> },
+          { path: "/my-subscriptions", element: <MySubscriptions /> },
+          { path: "/banner", element: <PromotionalBanner /> },
+          { path: "/manage", element: <ManageSubscription /> },
+          { path: "/checkout", element: <SubscriberCheckout /> },
+        ],
+      },
     ],
   },
 ]);

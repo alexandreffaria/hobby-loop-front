@@ -2,8 +2,11 @@ import axios from 'axios'
 import { getToken, removeToken } from './token'
 import { queryClient } from './queryClient'
 
+const baseURL = import.meta.env.VITE_API_URL
+if (!baseURL) throw new Error('VITE_API_URL is not set')
+
 export const api = axios.create({
-  baseURL: import.meta.env.VITE_API_URL,
+  baseURL,
   headers: { 'Content-Type': 'application/json' },
 })
 

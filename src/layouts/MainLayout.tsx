@@ -1,13 +1,22 @@
 import { Outlet, Link, useNavigate } from "react-router-dom";
+import { removeToken } from "../lib/token";
+import { queryClient } from "../lib/queryClient";
 
 export function MainLayout() {
   const navigate = useNavigate()
+
+  const handleLogout = () => {
+    removeToken()
+    queryClient.clear()
+    navigate('/login')
+  }
+
   return (
     <div className="flex min-h-screen flex-col bg-gray-50 font-sans text-gray-900">
       {/* Top Navbar */}
       <nav className="sticky top-0 flex items-center justify-between border-b border-gray-200 bg-white px-6 py-4">
         <Link
-          to="/"
+          to="/dashboard"
           className="text-xl font-bold tracking-tight text-indigo-600 transition-colors hover:text-indigo-800"
         >
           HobbyLoop
@@ -19,18 +28,23 @@ export function MainLayout() {
           >
             Dashboard
           </Link>
+          <Link
+            to="/subscriptions"
+            className="text-gray-600 transition-colors hover:text-indigo-600"
+          >
+            Assinaturas
+          </Link>
           <button
-            onClick={() => navigate('/login')}
+            onClick={handleLogout}
             className="rounded-lg bg-indigo-600 px-4 py-2 text-white shadow-sm transition-colors hover:bg-indigo-700"
           >
-            Log in
+            Sair
           </button>
         </div>
       </nav>
 
       {/* Main Content Area */}
       <main className="mx-auto w-full max-w-7xl flex-1 px-6 py-8">
-        {/* The Outlet is where our page components will magically render */}
         <Outlet />
       </main>
     </div>

@@ -4,7 +4,9 @@ import { useMutation } from '@tanstack/react-query'
 import { IMaskInput } from 'react-imask'
 import axios from 'axios'
 import * as authService from '../services/auth.service'
+import type { RegisterRequest } from '../services/auth.service'
 import { setToken } from '../lib/token'
+import { BrandLogo } from '../components/BrandLogo'
 
 export function Register() {
   const navigate = useNavigate()
@@ -21,17 +23,7 @@ export function Register() {
   const [clientError, setClientError] = useState('')
 
   const mutation = useMutation({
-    mutationFn: () =>
-      authService.register({
-        name,
-        email,
-        password,
-        company,
-        tax_id: taxId.replace(/\D/g, ''),
-        tax_id_type: taxIdType,
-        phone: phone.replace(/\D/g, ''),
-        address,
-      }),
+    mutationFn: (vars: RegisterRequest) => authService.register(vars),
     onSuccess: (data) => {
       setToken(data.token)
       navigate('/dashboard')
@@ -62,7 +54,16 @@ export function Register() {
       setClientError('As senhas não coincidem.')
       return
     }
-    mutation.mutate()
+    mutation.mutate({
+      name,
+      email,
+      password,
+      company,
+      tax_id: rawTaxId,
+      tax_id_type: taxIdType,
+      phone: phone.replace(/\D/g, ''),
+      address,
+    })
   }
 
   const serverError = mutation.isError
@@ -81,13 +82,7 @@ export function Register() {
 
   return (
     <div className="flex flex-col items-center">
-      {/* Logo */}
-      <div className="mb-8 flex flex-col items-center gap-2">
-        <div className="from-brand-pink to-brand-blue h-12 w-12 rounded-full bg-linear-to-tr shadow-lg" />
-        <span className="text-xs font-bold tracking-widest text-white/70 uppercase">
-          Hoby Loop
-        </span>
-      </div>
+      <BrandLogo className="mb-8" />
 
       <h1 className="text-brand-gradient mb-6 text-xl font-bold tracking-tight">
         Crie sua conta

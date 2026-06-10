@@ -3,7 +3,9 @@ import { Link, useNavigate } from 'react-router-dom'
 import { useMutation } from '@tanstack/react-query'
 import axios from 'axios'
 import * as authService from '../services/auth.service'
+import type { LoginRequest } from '../services/auth.service'
 import { setToken } from '../lib/token'
+import { BrandLogo } from '../components/BrandLogo'
 
 export function Login() {
   const navigate = useNavigate()
@@ -12,7 +14,7 @@ export function Login() {
   const [clientError, setClientError] = useState('')
 
   const mutation = useMutation({
-    mutationFn: () => authService.login({ email, password }),
+    mutationFn: (vars: LoginRequest) => authService.login(vars),
     onSuccess: (data) => {
       setToken(data.token)
       navigate('/dashboard')
@@ -25,18 +27,12 @@ export function Login() {
       setClientError('Preencha todos os campos.')
       return
     }
-    mutation.mutate()
+    mutation.mutate({ email, password })
   }
 
   return (
     <div className="flex flex-col items-center">
-      {/* Logo */}
-      <div className="mb-10 flex flex-col items-center gap-2">
-        <div className="from-brand-pink to-brand-blue h-12 w-12 rounded-full bg-linear-to-tr shadow-lg" />
-        <span className="text-xs font-bold tracking-widest text-white/70 uppercase">
-          Hoby Loop
-        </span>
-      </div>
+      <BrandLogo />
 
       <h1 className="text-brand-gradient mb-8 text-xl font-bold tracking-tight">
         Bem-vindo de volta

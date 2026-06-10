@@ -1,16 +1,11 @@
 import { useQuery } from '@tanstack/react-query'
 import { Link } from 'react-router-dom'
-import { api } from '../lib/api'
-import type { AuthUser } from '../services/auth.service'
-
-function fetchMe(): Promise<AuthUser> {
-  return api.get<{ data: AuthUser }>('/api/v1/users/me').then((r) => r.data.data)
-}
+import { getMe } from '../services/auth.service'
 
 export function Dashboard() {
   const { data, isPending, isError } = useQuery({
     queryKey: ['me'],
-    queryFn: fetchMe,
+    queryFn: getMe,
   })
 
   return (
@@ -20,7 +15,7 @@ export function Dashboard() {
       </h1>
 
       {isPending && (
-        <p className="text-indigo-500 animate-pulse">Loading...</p>
+        <p className="animate-pulse text-indigo-500">Loading...</p>
       )}
 
       {isError && (

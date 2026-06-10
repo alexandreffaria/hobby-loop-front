@@ -34,8 +34,8 @@ export function ProductList({ products, setProducts }: ProductListProps) {
 
       {/* The Bulleted List */}
       <ul className="mb-4 space-y-1">
-        {products.map((item, index) => (
-          <li key={index} className="text-brand-pink flex items-center text-sm">
+        {products.map((item) => (
+          <li key={item} className="text-brand-pink flex items-center text-sm">
             <span className="mr-2 text-blue-400">•</span>
             {item}
           </li>

@@ -52,7 +52,7 @@ function SubscriberRow({ data }: { data: Subscriber }) {
         {/* Address Block */}
         <div className="text-right">
           <p className="mb-1 text-[8px] font-bold tracking-widest text-white uppercase">
-            Edereço de entrega
+            Endereço de entrega
           </p>
           {/* Using whitespace-pre-line to respect the line breaks in the address string */}
           <p className="text-brand-blue max-w-40 text-[10px] leading-relaxed whitespace-pre-line">

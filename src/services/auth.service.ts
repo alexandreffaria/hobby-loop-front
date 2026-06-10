@@ -41,3 +41,8 @@ export const login = (body: LoginRequest): Promise<AuthResponse> =>
   api
     .post<{ data: AuthResponse }>('/api/v1/auth/login', body)
     .then((r) => r.data.data)
+
+export const getMe = (): Promise<AuthUser> =>
+  api
+    .get<{ data: AuthUser }>('/api/v1/users/me')
+    .then((r) => r.data.data)
