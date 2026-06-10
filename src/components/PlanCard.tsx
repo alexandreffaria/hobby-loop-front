@@ -8,6 +8,7 @@ interface PlanCardProps {
   description: string
   priceCents: number
   onEdit: () => void
+  onManage: () => void
 }
 
 function PencilIcon() {
@@ -64,14 +65,15 @@ function ProductBottlePlaceholder() {
   )
 }
 
-export function PlanCard({ id, name, description, priceCents, onEdit }: PlanCardProps) {
+export function PlanCard({ id, name, description, priceCents, onEdit, onManage }: PlanCardProps) {
   const [hovered, setHovered] = useState(false)
 
   return (
     <div className="flex flex-col items-center gap-3">
       {/* Outer dark shell */}
       <div
-        className="bg-brand-input relative w-full overflow-hidden rounded-[40px] border border-white/10 shadow-2xl transition-transform duration-200 hover:scale-[1.02] cursor-default"
+        className="bg-brand-input relative w-full overflow-hidden rounded-[40px] border border-white/10 shadow-2xl transition-transform duration-200 hover:scale-[1.02] cursor-pointer"
+        onClick={onManage}
         onMouseEnter={() => setHovered(true)}
         onMouseLeave={() => setHovered(false)}
       >
@@ -94,12 +96,12 @@ export function PlanCard({ id, name, description, priceCents, onEdit }: PlanCard
         {/* White inner card */}
         <div className="mx-3 mt-3 flex flex-col items-center rounded-[30px] bg-white px-3 py-4 text-center shadow-sm">
           {/* Plan name */}
-          <p className="font-bold text-[9px] uppercase tracking-wider text-gray-400 leading-tight">
+          <p className="font-bold text-sm uppercase tracking-wider text-gray-400 leading-tight">
             {name}
           </p>
 
           {/* Description */}
-          <p className="mt-0.5 text-[7px] text-gray-400 leading-snug line-clamp-2">
+          <p className="mt-0.5 text-[11px] text-gray-400 leading-snug line-clamp-2">
             {description}
           </p>
 
@@ -109,20 +111,20 @@ export function PlanCard({ id, name, description, priceCents, onEdit }: PlanCard
           </div>
 
           {/* Receba / Por labels */}
-          <p className="text-[8px] text-gray-500 leading-tight">
+          <p className="text-xs text-gray-500 leading-tight">
             Receba <strong className="text-gray-700">Mensalmente</strong>
           </p>
-          <p className="text-[8px] leading-tight text-brand-pink">
+          <p className="text-xs leading-tight text-brand-pink">
             Por <strong>1 ano</strong>
           </p>
 
           {/* Price banner */}
           <div className="mt-2 w-full rounded-xl bg-gray-100 px-2 py-1.5">
-            <p className="text-[10px] font-extrabold text-gray-800 leading-tight">
+            <p className="text-sm font-extrabold text-gray-800 leading-tight">
               R$ {formatCurrency(priceCents)}{' '}
               <span className="font-normal text-gray-500">ao mês</span>
             </p>
-            <p className="text-[6px] font-bold tracking-[0.12em] text-brand-pink uppercase mt-0.5">
+            <p className="text-[8px] font-bold tracking-[0.12em] text-brand-pink uppercase mt-0.5">
               Receba em casa
             </p>
           </div>
@@ -134,7 +136,7 @@ export function PlanCard({ id, name, description, priceCents, onEdit }: PlanCard
         </div>
 
         {/* Link footer */}
-        <p className="text-brand-blue px-4 py-3 text-center font-mono text-[7px] truncate">
+        <p className="text-brand-blue px-4 py-3 text-center font-mono text-[9px] truncate">
           hobbyloop.app/{id}
         </p>
       </div>

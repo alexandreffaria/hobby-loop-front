@@ -47,10 +47,9 @@ export function Subscriptions() {
         </div>
       )}
 
-      <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
+      <div className="grid grid-cols-2 gap-5 sm:grid-cols-2 lg:grid-cols-3">
         {isPending && (
           <>
-            <SkeletonCard />
             <SkeletonCard />
             <SkeletonCard />
             <SkeletonCard />
@@ -64,7 +63,8 @@ export function Subscriptions() {
             name={sub.name}
             description={sub.description}
             priceCents={sub.price_cents}
-            onEdit={() => navigate(`/manage/${sub.id}`)}
+            onEdit={() => navigate(`/edit/${sub.id}`)}
+            onManage={() => navigate(`/manage/${sub.id}`)}
           />
         ))}
 
