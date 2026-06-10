@@ -17,7 +17,7 @@ export function Login() {
     mutationFn: (vars: LoginRequest) => authService.login(vars),
     onSuccess: (data) => {
       setToken(data.token)
-      navigate('/dashboard')
+      navigate('/subscriptions')
     },
   })
 

@@ -26,7 +26,7 @@ export function Register() {
     mutationFn: (vars: RegisterRequest) => authService.register(vars),
     onSuccess: (data) => {
       setToken(data.token)
-      navigate('/dashboard')
+      navigate('/subscriptions')
     },
   })
 
