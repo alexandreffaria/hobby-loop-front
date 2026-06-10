@@ -34,3 +34,6 @@ export const getSubscription = (id: string): Promise<Subscription> =>
 
 export const updateSubscription = (id: string, body: UpdateSubscriptionRequest): Promise<Subscription> =>
   api.patch<{ data: Subscription }>(`/api/v1/subscriptions/${id}`, body).then((r) => r.data.data)
+
+export const deleteSubscription = (id: string): Promise<void> =>
+  api.delete(`/api/v1/subscriptions/${id}`)

@@ -1,134 +1,104 @@
-import { useState } from "react";
-import { SubscriptionCard } from "../components/SubscriptionCard";
-
-// 1. Strict Typing for the Statuses
-type DeliveryStatus = "Em preparação" | "Enviado" | "Entregue";
-
-interface Subscriber {
-  id: string;
-  name: string;
-  duration: string;
-  frequency: string;
-  status: DeliveryStatus;
-  address: string;
-}
-
-// 2. The Row Component (Molecule)
-// Extracting this keeps the main page clean and allows easy mapping.
-function SubscriberRow({ data }: { data: Subscriber }) {
-  const statusSteps: DeliveryStatus[] = [
-    "Em preparação",
-    "Enviado",
-    "Entregue",
-  ];
-
-  return (
-    <div className="flex w-full items-start justify-between border-b border-gray-800 py-6 last:border-0">
-      {/* Left Column: Subscriber Info */}
-      <div className="flex flex-col justify-center">
-        <p className="mb-3 text-sm font-bold tracking-wide text-white uppercase">
-          {data.name}
-        </p>
-        <p className="text-xs font-bold text-white">{data.duration}</p>
-        <p className="text-xs font-bold text-white">{data.frequency}</p>
-      </div>
-
-      {/* Right Column: Status & Address */}
-      <div className="flex flex-col items-end">
-        {/* Status Tracker Dots */}
-        <div className="mb-4 flex gap-4">
-          {statusSteps.map((step) => (
-            <div key={step} className="flex flex-col items-center gap-2">
-              <span className="text-[8px] font-medium text-white">{step}</span>
-              <div
-                className={`h-5 w-5 rounded-full shadow-inner ${
-                  data.status === step ? "bg-brand-pink" : "bg-[#d9d9d9]"
-                }`}
-              />
-            </div>
-          ))}
-        </div>
-
-        {/* Address Block */}
-        <div className="text-right">
-          <p className="mb-1 text-[8px] font-bold tracking-widest text-white uppercase">
-            Endereço de entrega
-          </p>
-          {/* Using whitespace-pre-line to respect the line breaks in the address string */}
-          <p className="text-brand-blue max-w-40 text-[10px] leading-relaxed whitespace-pre-line">
-            {data.address}
-          </p>
-        </div>
-      </div>
-    </div>
-  );
-}
+import { useNavigate, useParams, Link } from 'react-router-dom'
+import { useMutation, useQuery } from '@tanstack/react-query'
+import axios from 'axios'
+import { deleteSubscription, getSubscription } from '../services/subscription.service'
+import { queryClient } from '../lib/queryClient'
+import { formatCurrency } from '../lib/formatters'
 
 export function ManageSubscription() {
-  // Mock Data
-  const [subscribers] = useState<Subscriber[]>([
-    {
-      id: "1",
-      name: "NOME DO ASSINANTE",
-      duration: "Por 1 ano",
-      frequency: "Mensalmente",
-      status: "Enviado",
-      address: "Rua Flor de lotus\nN-456 CEP 93893899 FLN",
+  const { id } = useParams<{ id: string }>()
+  const navigate = useNavigate()
+
+  const { data: subscription, isPending, isError } = useQuery({
+    queryKey: ['subscriptions', id],
+    queryFn: () => getSubscription(id!),
+    enabled: !!id,
+  })
+
+  const deleteMutation = useMutation({
+    mutationFn: () => deleteSubscription(id!),
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({ queryKey: ['subscriptions'] })
+      navigate('/subscriptions')
     },
-    {
-      id: "2",
-      name: "NOME DO ASSINANTE",
-      duration: "Por 1 ano",
-      frequency: "Mensalmente",
-      status: "Entregue",
-      address: "Rua Flor de lotus\nN-456 CEP 93893899 FLN",
-    },
-    {
-      id: "3",
-      name: "NOME DO ASSINANTE",
-      duration: "Por 1 ano",
-      frequency: "Mensalmente",
-      status: "Em preparação",
-      address: "Rua Flor de lotus\nN-456 CEP 93893899 FLN",
-    },
-  ]);
+  })
+
+  const handleDelete = () => {
+    if (!window.confirm('Tem certeza que deseja excluir esta assinatura?')) return
+    deleteMutation.mutate()
+  }
+
+  const deleteError = deleteMutation.isError
+    ? axios.isAxiosError(deleteMutation.error)
+      ? (deleteMutation.error.response?.data?.error ?? 'Erro ao excluir.')
+      : 'Erro ao excluir.'
+    : null
 
   return (
-    <div className="bg-brand-bg flex min-h-screen w-full flex-col items-center pb-10">
-      {/* 1. Header Section */}
-      <div className="flex w-full flex-col items-center px-6 pt-10 pb-6">
-        <h1 className="text-brand-gradient text-xl font-bold">
-          Assinatura kit higiene
+    <div className="mx-auto w-full max-w-lg px-4 pb-16 pt-10 sm:px-6">
+      <div className="mb-8 flex items-center gap-3">
+        <Link
+          to="/subscriptions"
+          className="flex h-8 w-8 items-center justify-center rounded-full text-gray-400 transition-colors hover:bg-white/5 hover:text-white"
+          aria-label="Voltar"
+        >
+          ←
+        </Link>
+        <h1 className="text-brand-gradient text-xl font-bold tracking-tight">
+          {isPending ? 'Carregando...' : (subscription?.name ?? 'Assinatura')}
         </h1>
-        <p className="text-brand-pink mt-1 text-sm font-bold">
-          Entrega Mensal- Plano anual
-        </p>
+      </div>
 
-        {/* Reusing the Card as a visual anchor */}
-        <div className="mt-8 w-full max-w-60">
-          <SubscriptionCard
-            title="Kit Higiene"
-            items="1 Desodorante 1 sabonete 1 hidratante"
-            price="78,00"
-            duration="1 ano"
-            link="www.meulink de assinantes.com.br"
-            hideAction={true} // Hides the share button
-          />
+      {isError && (
+        <div className="mb-6 rounded-xl border border-red-500/20 bg-red-500/10 px-4 py-3">
+          <p className="text-sm text-red-400">Não foi possível carregar a assinatura.</p>
         </div>
+      )}
+
+      {subscription && (
+        <div className="bg-brand-input overflow-hidden rounded-2xl border border-white/10 shadow-2xl">
+          <div className="border-b border-white/5 px-5 py-4">
+            <p className="mb-1 text-[11px] font-medium tracking-widest text-gray-500 uppercase">Produtos</p>
+            <div className="flex flex-wrap gap-2 pt-1">
+              {subscription.products.map((p) => (
+                <span
+                  key={p.id}
+                  className="border-brand-pink bg-brand-pink/15 text-brand-pink rounded-full border px-3 py-1 text-xs font-medium"
+                >
+                  {p.name}
+                </span>
+              ))}
+            </div>
+          </div>
+          <div className="px-5 py-4">
+            <p className="mb-1 text-[11px] font-medium tracking-widest text-gray-500 uppercase">Valor</p>
+            <p className="text-2xl font-semibold text-white">
+              R$ {formatCurrency(subscription.price_cents)}
+              <span className="ml-1 text-sm font-normal text-gray-500">ao mês</span>
+            </p>
+          </div>
+        </div>
+      )}
+
+      <div className="mt-8 rounded-2xl border border-white/5 bg-white/[0.02] px-5 py-8 text-center">
+        <p className="text-sm text-gray-500">
+          Assinantes aparecem aqui quando alguém se inscrever neste plano.
+        </p>
       </div>
 
-      {/* 2. List Header */}
-      <div className="flex w-full max-w-md items-center justify-between bg-[#13151b] px-6 py-4">
-        <h2 className="text-brand-blue text-lg font-bold">38 assinantes</h2>
-        <h2 className="text-brand-blue text-lg font-bold">Entregas</h2>
-      </div>
+      {deleteError && (
+        <div className="mt-4 rounded-xl border border-red-500/20 bg-red-500/10 px-4 py-3">
+          <p className="text-sm text-red-400">{deleteError}</p>
+        </div>
+      )}
 
-      {/* 3. Subscribers List */}
-      <div className="w-full max-w-md bg-[#13151b] px-6">
-        {subscribers.map((sub) => (
-          <SubscriberRow key={sub.id} data={sub} />
-        ))}
-      </div>
+      <button
+        onClick={handleDelete}
+        disabled={deleteMutation.isPending || isPending}
+        className="mt-6 w-full rounded-xl border border-red-500/30 bg-red-500/10 py-3 text-sm font-medium text-red-400 transition-all hover:bg-red-500/20 disabled:cursor-not-allowed disabled:opacity-50"
+      >
+        {deleteMutation.isPending ? 'Excluindo...' : 'Excluir assinatura'}
+      </button>
     </div>
-  );
+  )
 }
