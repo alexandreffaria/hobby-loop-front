@@ -5,14 +5,7 @@ import axios from 'axios'
 import { listProducts } from '../services/product.service'
 import { getSubscription, updateSubscription, type UpdateSubscriptionRequest } from '../services/subscription.service'
 import { queryClient } from '../lib/queryClient'
-
-function parsePriceCents(raw: string): number {
-  return Math.round(parseFloat(raw.replace(',', '.')) * 100)
-}
-
-function formatPriceStr(cents: number): string {
-  return (cents / 100).toFixed(2).replace('.', ',')
-}
+import { parsePriceCents, formatPriceStr } from '../lib/formatters'
 
 export function EditSubscription() {
   const { id } = useParams<{ id: string }>()

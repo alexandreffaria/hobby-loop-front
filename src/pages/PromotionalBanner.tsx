@@ -54,12 +54,9 @@ export function PromotionalBanner() {
 
         {/* Link Footer - Outside the pink border! */}
         <div className="mt-6">
-          <a
-            href="#"
-            className="text-xs font-bold text-[#00d0ff] transition-colors hover:text-white hover:underline"
-          >
-            www.meulink de assinantes.com.br
-          </a>
+          <span className="text-xs font-bold text-[#00d0ff]">
+            hobbyloop.app/seu-link
+          </span>
         </div>
       </div>
     </div>

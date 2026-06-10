@@ -6,10 +6,7 @@ import { listProducts } from '../services/product.service'
 import { createSubscription } from '../services/subscription.service'
 import type { CreateSubscriptionRequest } from '../services/subscription.service'
 import { queryClient } from '../lib/queryClient'
-
-function parsePriceCents(raw: string): number {
-  return Math.round(parseFloat(raw.replace(',', '.')) * 100)
-}
+import { parsePriceCents } from '../lib/formatters'
 
 export function CreateSubscription() {
   const navigate = useNavigate()
