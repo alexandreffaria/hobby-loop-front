@@ -16,36 +16,39 @@ import { ErrorBoundary } from './components/ErrorBoundary'
 
 const router = createBrowserRouter([
   {
-    path: '/',
-    element: <Navigate to="/login" replace />,
-  },
-
-  // Auth pages — centered card layout, no authentication required
-  {
-    element: <AuthLayout />,
-    ErrorBoundary: ErrorBoundary,
-    children: [
-      { path: '/login', element: <Login /> },
-      { path: '/register', element: <Register /> },
-    ],
-  },
-
-  // Dark-themed app pages — require authentication
-  {
-    element: <ProtectedRoute />,
     ErrorBoundary: ErrorBoundary,
     children: [
       {
-        element: <DarkLayout />,
+        path: '/',
+        element: <Navigate to="/login" replace />,
+      },
+
+      // Auth pages — centered card layout, no authentication required
+      {
+        element: <AuthLayout />,
         children: [
-          { path: '/subscriptions', element: <Subscriptions /> },
-          { path: '/subscriptions/new', element: <CreateSubscription /> },
-          { path: '/payment', element: <PaymentDetails /> },
-          { path: '/my-subscriptions', element: <MySubscriptions /> },
-          { path: '/banner', element: <PromotionalBanner /> },
-          { path: '/manage/:id', element: <ManageSubscription /> },
-          { path: '/edit/:id', element: <EditSubscription /> },
-          { path: '/checkout', element: <SubscriberCheckout /> },
+          { path: '/login', element: <Login /> },
+          { path: '/register', element: <Register /> },
+        ],
+      },
+
+      // Dark-themed app pages — require authentication
+      {
+        element: <ProtectedRoute />,
+        children: [
+          {
+            element: <DarkLayout />,
+            children: [
+              { path: '/subscriptions', element: <Subscriptions /> },
+              { path: '/subscriptions/new', element: <CreateSubscription /> },
+              { path: '/payment', element: <PaymentDetails /> },
+              { path: '/my-subscriptions', element: <MySubscriptions /> },
+              { path: '/banner', element: <PromotionalBanner /> },
+              { path: '/manage/:id', element: <ManageSubscription /> },
+              { path: '/edit/:id', element: <EditSubscription /> },
+              { path: '/checkout', element: <SubscriberCheckout /> },
+            ],
+          },
         ],
       },
     ],
