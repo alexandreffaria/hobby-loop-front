@@ -1,167 +1,181 @@
-import React, { useState, useRef } from "react";
-import { FormField } from "../components/FormField";
-import { ProductList } from "../components/ProductList";
+import { useState } from 'react'
+import { Link, useNavigate } from 'react-router-dom'
+import { useMutation, useQuery } from '@tanstack/react-query'
+import axios from 'axios'
+import { listProducts } from '../services/product.service'
+import { createSubscription } from '../services/subscription.service'
+import type { CreateSubscriptionRequest } from '../services/subscription.service'
+import { queryClient } from '../lib/queryClient'
+
+function parsePriceCents(raw: string): number {
+  return Math.round(parseFloat(raw.replace(',', '.')) * 100)
+}
 
 export function CreateSubscription() {
-  // 1. Centralized State: All fields are now "Controlled Components"
-  const [formData, setFormData] = useState({
-    name: "Kit higiene",
-    products: ["Desodorante", "Sabonete liquido", "Óleo hidratante"],
-    description: "",
-    frequency: "Mensal",
-    shippingCost: "30,00",
-    value: "80,00",
-    duration: "1 ano",
-    image: null as File | null,
-  });
+  const navigate = useNavigate()
 
-  // 2. Refs for specialized interactions (like triggering hidden file inputs)
-  const fileInputRef = useRef<HTMLInputElement>(null);
+  const [name, setName] = useState('')
+  const [selectedIds, setSelectedIds] = useState<string[]>([])
+  const [description, setDescription] = useState('')
+  const [priceStr, setPriceStr] = useState('')
+  const [clientError, setClientError] = useState('')
 
-  // 3. Generic handler for standard text inputs
-  const handleTextChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
-  };
+  const { data: products = [] } = useQuery({
+    queryKey: ['products'],
+    queryFn: listProducts,
+  })
 
-  // 4. Mock logic for dropdowns (cycling options for now)
-  const toggleFrequency = () => {
-    const options = ["Mensal", "Trimestral", "Semestral"];
-    const currentIndex = options.indexOf(formData.frequency);
-    const nextIndex = (currentIndex + 1) % options.length;
-    setFormData((prev) => ({ ...prev, frequency: options[nextIndex] }));
-  };
+  const mutation = useMutation({
+    mutationFn: (vars: CreateSubscriptionRequest) => createSubscription(vars),
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({ queryKey: ['subscriptions'] })
+      navigate('/subscriptions')
+    },
+  })
 
-  const toggleDuration = () => {
-    const options = ["6 meses", "1 ano", "2 anos"];
-    const currentIndex = options.indexOf(formData.duration);
-    const nextIndex = (currentIndex + 1) % options.length;
-    setFormData((prev) => ({ ...prev, duration: options[nextIndex] }));
-  };
+  const toggleProduct = (id: string) => {
+    setSelectedIds((prev) =>
+      prev.includes(id) ? prev.filter((x) => x !== id) : [...prev, id],
+    )
+  }
+
+  const handleSubmit = () => {
+    setClientError('')
+
+    if (name.trim() === '') {
+      setClientError('Nome é obrigatório.')
+      return
+    }
+    if (selectedIds.length === 0) {
+      setClientError('Selecione ao menos um produto.')
+      return
+    }
+    const priceCents = parsePriceCents(priceStr)
+    if (isNaN(priceCents) || priceCents <= 0) {
+      setClientError('Informe um valor válido.')
+      return
+    }
+
+    mutation.mutate({
+      name: name.trim(),
+      description: description.trim(),
+      price_cents: priceCents,
+      product_ids: selectedIds,
+    })
+  }
+
+  const serverError = mutation.isError
+    ? axios.isAxiosError(mutation.error)
+      ? (mutation.error.response?.data?.error ?? 'Erro ao salvar assinatura.')
+      : 'Erro ao salvar assinatura.'
+    : null
 
   return (
-    <div className="flex flex-col items-center">
-      <h1 className="text-brand-gradient mb-8 text-xl font-bold">
-        Crie sua assinatura
-      </h1>
-
-      <div className="border-brand-pink/60 bg-brand-input flex w-full flex-col divide-y divide-gray-800 overflow-hidden rounded-xl border shadow-2xl">
-        {/* Name Field */}
-        <FormField label="Nome da assinatura?">
-          <input
-            name="name"
-            type="text"
-            value={formData.name}
-            onChange={handleTextChange}
-            className="text-brand-pink w-full bg-transparent outline-none"
-          />
-        </FormField>
-
-        {/* Dynamic Product List */}
-        <ProductList
-          products={formData.products}
-          setProducts={(newItems) =>
-            setFormData({ ...formData, products: newItems })
-          }
-        />
-
-        {/* 5. Image Upload: Hidden input triggered by the div click */}
-        <div
-          onClick={() => fileInputRef.current?.click()}
-          className="flex cursor-pointer flex-col items-center justify-center bg-black/20 py-12 transition-colors hover:bg-black/40"
+    <div className="mx-auto w-full max-w-lg px-4 pb-16 pt-10 sm:px-6">
+      {/* Header */}
+      <div className="mb-8 flex items-center gap-3">
+        <Link
+          to="/subscriptions"
+          className="flex h-8 w-8 items-center justify-center rounded-full text-gray-400 transition-colors hover:bg-white/5 hover:text-white"
+          aria-label="Voltar"
         >
-          <input
-            type="file"
-            ref={fileInputRef}
-            className="hidden"
-            accept="image/*"
-            onChange={(e) => {
-              const file = e.target.files?.[0];
-              if (file) setFormData((prev) => ({ ...prev, image: file }));
-            }}
-          />
-          <div className="mb-2 flex h-8 w-12 items-center justify-center rounded bg-gray-700">
-            <div
-              className={`h-2 w-2 rounded-full ${formData.image ? "bg-green-500" : "bg-brand-pink"}`}
-            ></div>
-          </div>
-          <span className="text-xs text-gray-400">
-            {formData.image ? formData.image.name : "Foto dos produtos"}
-          </span>
-        </div>
-
-        {/* Description Field */}
-        <FormField label="Descrição breve dos produtos">
-          <input
-            name="description"
-            type="text"
-            placeholder="Ex: Kit Higiene com tudo o que você..."
-            value={formData.description}
-            onChange={handleTextChange}
-            className="w-full bg-transparent text-sm text-white placeholder-gray-500 outline-none"
-          />
-        </FormField>
-
-        {/* Frequency Select (Now Interactive) */}
-        <FormField
-          label="Frequências de envio"
-          isSelect
-          onClick={toggleFrequency}
-        >
-          <div className="flex w-full items-center justify-between">
-            <span>{formData.frequency}</span>
-            <span className="text-brand-blue text-[10px]">▼</span>
-          </div>
-        </FormField>
-
-        {/* Shipping Cost (Now Editable) */}
-        <FormField label="Custo padrão frete">
-          <div className="text-brand-pink flex items-center">
-            <span className="mr-1 text-xs">R$</span>
-            <input
-              name="shippingCost"
-              type="text"
-              value={formData.shippingCost}
-              onChange={handleTextChange}
-              className="w-full bg-transparent outline-none"
-            />
-          </div>
-        </FormField>
-
-        {/* Subscription Value (Now Editable) */}
-        <FormField label="Valor da assinatura">
-          <div className="text-brand-pink flex items-center">
-            <span className="mr-1 text-xs">R$</span>
-            <input
-              name="value"
-              type="text"
-              value={formData.value}
-              onChange={handleTextChange}
-              className="w-full bg-transparent outline-none"
-            />
-          </div>
-        </FormField>
-
-        {/* Duration Select (Now Interactive) */}
-        <FormField
-          label="Por quanto tempo deseja entrega esta assinatura?"
-          isSelect
-          onClick={toggleDuration}
-        >
-          <div className="flex w-full items-center justify-between">
-            <span>{formData.duration}</span>
-            <span className="text-brand-blue text-[10px]">▼</span>
-          </div>
-        </FormField>
+          ←
+        </Link>
+        <h1 className="text-brand-gradient text-xl font-bold tracking-tight">
+          Nova assinatura
+        </h1>
       </div>
 
-      {/* 6. Submit Button: For future Go backend integration */}
+      {/* Form card */}
+      <div className="bg-brand-input overflow-hidden rounded-2xl border border-white/10 shadow-2xl">
+        {/* Name */}
+        <div className="border-b border-white/5 px-5 py-4">
+          <label className="mb-1.5 block text-[11px] font-medium tracking-widest text-gray-500 uppercase">
+            Nome da assinatura
+          </label>
+          <input
+            type="text"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            placeholder="Ex: Kit higiene mensal"
+            className="w-full bg-transparent text-sm text-white placeholder-gray-600 outline-none"
+          />
+        </div>
+
+        {/* Products */}
+        <div className="border-b border-white/5 px-5 py-4">
+          <label className="mb-3 block text-[11px] font-medium tracking-widest text-gray-500 uppercase">
+            Produtos incluídos
+          </label>
+          <div className="flex flex-wrap gap-2">
+            {products.map((p) => {
+              const selected = selectedIds.includes(p.id)
+              return (
+                <button
+                  key={p.id}
+                  type="button"
+                  onClick={() => toggleProduct(p.id)}
+                  className={`rounded-full border px-3 py-1.5 text-xs font-medium transition-all duration-150 ${
+                    selected
+                      ? 'border-brand-pink bg-brand-pink/15 text-brand-pink'
+                      : 'border-white/10 bg-white/5 text-gray-400 hover:border-white/20 hover:text-gray-300'
+                  }`}
+                >
+                  {selected && <span className="mr-1">✓</span>}
+                  {p.name}
+                </button>
+              )
+            })}
+          </div>
+        </div>
+
+        {/* Description */}
+        <div className="border-b border-white/5 px-5 py-4">
+          <label className="mb-1.5 block text-[11px] font-medium tracking-widest text-gray-500 uppercase">
+            Descrição
+          </label>
+          <textarea
+            rows={2}
+            value={description}
+            onChange={(e) => setDescription(e.target.value)}
+            placeholder="Descreva brevemente os produtos desta caixa..."
+            className="w-full resize-none bg-transparent text-sm text-white placeholder-gray-600 outline-none"
+          />
+        </div>
+
+        {/* Price */}
+        <div className="px-5 py-4">
+          <label className="mb-1.5 block text-[11px] font-medium tracking-widest text-gray-500 uppercase">
+            Valor da assinatura
+          </label>
+          <div className="flex items-baseline gap-1">
+            <span className="text-xs text-gray-500">R$</span>
+            <input
+              type="text"
+              value={priceStr}
+              onChange={(e) => setPriceStr(e.target.value)}
+              placeholder="0,00"
+              className="w-full bg-transparent text-2xl font-semibold text-white placeholder-gray-700 outline-none"
+            />
+          </div>
+        </div>
+      </div>
+
+      {/* Errors */}
+      {(clientError || serverError) && (
+        <div className="mt-4 rounded-xl border border-red-500/20 bg-red-500/10 px-4 py-3">
+          <p className="text-sm text-red-400">{clientError || serverError}</p>
+        </div>
+      )}
+
+      {/* Submit */}
       <button
-        onClick={() => console.log("Payload for Go backend:", formData)}
-        className="from-brand-pink to-brand-blue mt-6 w-full rounded-xl bg-linear-to-r py-4 text-sm font-bold text-white shadow-lg active:scale-95"
+        onClick={handleSubmit}
+        disabled={mutation.isPending}
+        className="from-brand-pink to-brand-blue mt-6 w-full rounded-xl bg-linear-to-r py-4 text-sm font-bold text-white shadow-lg transition-all hover:scale-[1.02] hover:shadow-xl active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-60"
       >
-        Salvar Assinatura
+        {mutation.isPending ? 'Salvando...' : 'Salvar assinatura →'}
       </button>
     </div>
-  );
+  )
 }
