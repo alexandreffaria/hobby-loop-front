@@ -1,10 +1,16 @@
 import { api } from '../lib/api'
 
+export interface ProductRef {
+  id: string
+  name: string
+}
+
 export interface Subscription {
   id: string
   name: string
   description: string
   price_cents: number
+  products: ProductRef[]
   created_at: string
 }
 
@@ -12,6 +18,7 @@ export interface CreateSubscriptionRequest {
   name: string
   description: string
   price_cents: number
+  product_ids: string[]
 }
 
 export const listSubscriptions = (): Promise<Subscription[]> =>
