@@ -12,6 +12,7 @@ import { PromotionalBanner } from './pages/PromotionalBanner'
 import { ManageSubscription } from './pages/ManageSubscription'
 import { EditSubscription } from './pages/EditSubscription'
 import { SubscriberCheckout } from './pages/SubscriberCheckout'
+import { ErrorBoundary } from './components/ErrorBoundary'
 
 const router = createBrowserRouter([
   {
@@ -22,6 +23,7 @@ const router = createBrowserRouter([
   // Auth pages — centered card layout, no authentication required
   {
     element: <AuthLayout />,
+    ErrorBoundary: ErrorBoundary,
     children: [
       { path: '/login', element: <Login /> },
       { path: '/register', element: <Register /> },
@@ -31,6 +33,7 @@ const router = createBrowserRouter([
   // Dark-themed app pages — require authentication
   {
     element: <ProtectedRoute />,
+    ErrorBoundary: ErrorBoundary,
     children: [
       {
         element: <DarkLayout />,
