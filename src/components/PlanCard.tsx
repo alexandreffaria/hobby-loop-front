@@ -76,7 +76,12 @@ export function PlanCard({ id, name, description, priceCents, onEdit, onManage }
         role="button"
         tabIndex={0}
         onClick={onManage}
-        onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') onManage() }}
+        onKeyDown={(e) => {
+          if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault()
+            onManage()
+          }
+        }}
         onMouseEnter={() => setHovered(true)}
         onMouseLeave={() => setHovered(false)}
       >
