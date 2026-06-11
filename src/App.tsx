@@ -43,7 +43,7 @@ const router = createBrowserRouter([
               { path: '/subscriptions/new', element: <CreateSubscription /> },
               { path: '/payment', element: <PaymentDetails /> },
               { path: '/my-subscriptions', element: <MySubscriptions /> },
-              { path: '/banner', element: <PromotionalBanner /> },
+              { path: '/banner/:id', element: <PromotionalBanner /> },
               { path: '/manage/:id', element: <ManageSubscription /> },
               { path: '/edit/:id', element: <EditSubscription /> },
               { path: '/checkout', element: <SubscriberCheckout /> },

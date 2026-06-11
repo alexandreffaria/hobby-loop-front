@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { Link } from 'react-router-dom'
 import { QRCodePlaceholder } from './QRCodePlaceholder'
 import { ProductBottlePlaceholder } from './ProductBottlePlaceholder'
 import { formatCurrency } from '../lib/formatters'
@@ -115,10 +116,13 @@ export function PlanCard({ id, name, description, priceCents, onEdit, onManage }
       </div>
 
       {/* Share button */}
-      <button className="flex w-full items-center justify-center gap-1.5 rounded-full bg-blue-600 py-2 text-xs font-bold text-white shadow-lg transition-all duration-150 hover:bg-blue-700 active:scale-95">
+      <Link
+        to={`/banner/${id}`}
+        className="flex w-full items-center justify-center gap-1.5 rounded-full bg-blue-600 py-2 text-xs font-bold text-white shadow-lg transition-all duration-150 hover:bg-blue-700 active:scale-95"
+      >
         Compartilhar
         <span>✈</span>
-      </button>
+      </Link>
     </div>
   )
 }
