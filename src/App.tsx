@@ -1,6 +1,7 @@
 import { Navigate, createBrowserRouter, RouterProvider } from 'react-router-dom'
 import { AuthLayout } from './layouts/AuthLayout'
 import { DarkLayout } from './layouts/DarkLayout'
+import { PublicLayout } from './layouts/PublicLayout'
 import { ProtectedRoute } from './components/ProtectedRoute'
 import { Register } from './pages/Register'
 import { Login } from './pages/Login'
@@ -11,7 +12,8 @@ import { MySubscriptions } from './pages/MySubscription'
 import { PromotionalBanner } from './pages/PromotionalBanner'
 import { ManageSubscription } from './pages/ManageSubscription'
 import { EditSubscription } from './pages/EditSubscription'
-import { SubscriberCheckout } from './pages/SubscriberCheckout'
+import { SubscribePage } from './pages/SubscribePage'
+import { SubscribeSuccess } from './pages/SubscribeSuccess'
 import { ErrorBoundary } from './components/ErrorBoundary'
 
 const router = createBrowserRouter([
@@ -32,6 +34,15 @@ const router = createBrowserRouter([
         ],
       },
 
+      // Public subscriber checkout — customers have no account
+      {
+        element: <PublicLayout />,
+        children: [
+          { path: '/s/:id', element: <SubscribePage /> },
+          { path: '/s/:id/sucesso', element: <SubscribeSuccess /> },
+        ],
+      },
+
       // Dark-themed app pages — require authentication
       {
         element: <ProtectedRoute />,
@@ -46,7 +57,6 @@ const router = createBrowserRouter([
               { path: '/banner/:id', element: <PromotionalBanner /> },
               { path: '/manage/:id', element: <ManageSubscription /> },
               { path: '/edit/:id', element: <EditSubscription /> },
-              { path: '/checkout', element: <SubscriberCheckout /> },
             ],
           },
         ],
