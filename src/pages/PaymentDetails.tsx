@@ -50,6 +50,7 @@ export function PaymentDetails() {
           <div className="rounded-xl border border-white/10 bg-white/5 p-1">
             <input
               name="number"
+              value={cardData.number}
               placeholder="Número do Cartão"
               className="w-full bg-transparent p-3 text-sm text-white outline-none placeholder:text-gray-500"
               onChange={handleInputChange}
@@ -61,6 +62,7 @@ export function PaymentDetails() {
             <div className="flex-2 rounded-xl border border-white/10 bg-white/5 p-1">
               <input
                 name="expiry"
+                value={cardData.expiry}
                 placeholder="Validade MM/AA"
                 className="w-full bg-transparent p-3 text-sm text-white outline-none placeholder:text-gray-500"
                 onChange={handleInputChange}
@@ -69,6 +71,7 @@ export function PaymentDetails() {
             <div className="flex-1 rounded-xl border border-white/10 bg-white/5 p-1">
               <input
                 name="cvc"
+                value={cardData.cvc}
                 placeholder="CVC"
                 className="w-full bg-transparent p-3 text-sm text-white outline-none placeholder:text-gray-500"
                 onChange={handleInputChange}
@@ -76,9 +79,10 @@ export function PaymentDetails() {
             </div>
           </div>
 
-          {/* CTA Button */}
+          {/* CTA Button — prototype: payment processing not implemented yet.
+              Never log card data, even in prototypes. */}
           <button
-            onClick={() => console.log("Processing payment for:", cardData)}
+            type="button"
             className="mt-4 w-full rounded-2xl bg-linear-to-r from-[#e93fc1] to-[#f053cc] py-4 text-base font-bold text-white shadow-[0_0_20px_rgba(233,63,193,0.3)] transition-all hover:brightness-110 active:scale-[0.98]"
           >
             Realizar pagamento

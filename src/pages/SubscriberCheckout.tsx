@@ -36,8 +36,9 @@ export function SubscriberCheckout() {
     setCheckoutData((prev) => ({ ...prev, [name]: value }));
   };
 
+  // Prototype: payment processing not implemented yet.
+  // Never log checkout/card data, even in prototypes.
   const handleCheckout = () => {
-    console.log("Processing Checkout Payload:", checkoutData);
     alert("Pagamento realizado com sucesso!");
   };
 
