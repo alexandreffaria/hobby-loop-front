@@ -1,8 +1,9 @@
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
-import { QRCodePlaceholder } from './QRCodePlaceholder'
+import { QRCodeSVG } from 'qrcode.react'
 import { ProductBottlePlaceholder } from './ProductBottlePlaceholder'
 import { formatCurrency } from '../lib/formatters'
+import { buildPublicLink, displayPublicLink } from '../lib/publicLink'
 
 interface PlanCardProps {
   id: string
@@ -103,15 +104,15 @@ export function PlanCard({ id, name, description, priceCents, onEdit, onManage }
             </p>
           </div>
 
-          {/* QR code placeholder */}
-          <div className="mt-3 text-gray-400">
-            <QRCodePlaceholder />
+          {/* Scannable link to the public subscribe page */}
+          <div className="mt-3">
+            <QRCodeSVG value={buildPublicLink(id)} size={64} marginSize={1} />
           </div>
         </div>
 
         {/* Link footer */}
         <p className="text-brand-blue px-4 py-3 text-center font-mono text-[9px] truncate">
-          hobbyloop.app/{id}
+          {displayPublicLink(id)}
         </p>
       </div>
 

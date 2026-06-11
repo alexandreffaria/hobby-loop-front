@@ -2,6 +2,7 @@ import { describe, it, expect } from 'vitest'
 import { render, screen } from '@testing-library/react'
 import { BannerArtboard } from './BannerArtboard'
 import { BANNER_FORMATS } from '../lib/bannerFormats'
+import { displayPublicLink } from '../lib/publicLink'
 import type { Subscription } from '../services/subscription.service'
 
 const plan: Subscription = {
@@ -23,7 +24,7 @@ describe('BannerArtboard', () => {
     expect(screen.getByText('Kit Higiene')).toBeDefined()
     expect(screen.getByText(/Desodorante/)).toBeDefined()
     expect(screen.getByText(/78,00/)).toBeDefined()
-    expect(screen.getByText('hobbyloop.app/abc-123')).toBeDefined()
+    expect(screen.getByText(displayPublicLink('abc-123'))).toBeDefined()
   })
 
   it.each(BANNER_FORMATS)('sizes the artboard to $id dimensions', (format) => {

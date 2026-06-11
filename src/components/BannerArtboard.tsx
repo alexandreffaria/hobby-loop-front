@@ -1,7 +1,8 @@
 import type { Ref } from 'react'
-import { QRCodePlaceholder } from './QRCodePlaceholder'
+import { QRCodeSVG } from 'qrcode.react'
 import { ProductBottlePlaceholder } from './ProductBottlePlaceholder'
 import { formatCurrency } from '../lib/formatters'
+import { buildPublicLink, displayPublicLink } from '../lib/publicLink'
 import type { Subscription } from '../services/subscription.service'
 import type { BannerFormat } from '../lib/bannerFormats'
 
@@ -27,7 +28,7 @@ function BannerHeadline() {
 
 function BannerLink({ planId }: { planId: string }) {
   return (
-    <p className="font-mono text-sm font-bold text-[#00d0ff]">hobbyloop.app/{planId}</p>
+    <p className="font-mono text-sm font-bold text-[#00d0ff]">{displayPublicLink(planId)}</p>
   )
 }
 
@@ -68,8 +69,8 @@ function BannerCard({ plan }: { plan: Subscription }) {
       <p className="text-brand-pink mt-2 text-xs font-bold">Receba em casa</p>
 
       {/* QR tile overlapping the card's bottom edge, as in the mockup */}
-      <div className="absolute -bottom-10 left-1/2 -translate-x-1/2 rounded-xl bg-white p-2 text-black shadow-xl">
-        <QRCodePlaceholder />
+      <div className="absolute -bottom-10 left-1/2 -translate-x-1/2 rounded-xl bg-white p-2 shadow-xl">
+        <QRCodeSVG value={buildPublicLink(plan.id)} size={88} fgColor="#000000" marginSize={0} />
       </div>
     </div>
   )
