@@ -9,11 +9,9 @@ import { Subscriptions } from './pages/Subscriptions'
 import { CreateSubscription } from './pages/CreateSubscription'
 import { PaymentDetails } from './pages/PaymentDetails'
 import { MySubscriptions } from './pages/MySubscription'
-import { PromotionalBanner } from './pages/PromotionalBanner'
 import { ManageSubscription } from './pages/ManageSubscription'
 import { EditSubscription } from './pages/EditSubscription'
 import { SubscribePage } from './pages/SubscribePage'
-import { SubscribePayment } from './pages/SubscribePayment'
 import { SubscribeSuccess } from './pages/SubscribeSuccess'
 import { ErrorBoundary } from './components/ErrorBoundary'
 
@@ -40,7 +38,14 @@ const router = createBrowserRouter([
         element: <PublicLayout />,
         children: [
           { path: '/s/:id', element: <SubscribePage /> },
-          { path: '/s/:id/pagamento', element: <SubscribePayment /> },
+          {
+            path: '/s/:id/pagamento',
+            // Lazy: keeps the Stripe SDK out of the company-app bundle.
+            lazy: () =>
+              import('./pages/SubscribePayment').then((m) => ({
+                Component: m.SubscribePayment,
+              })),
+          },
           { path: '/s/:id/sucesso', element: <SubscribeSuccess /> },
         ],
       },
@@ -56,7 +61,14 @@ const router = createBrowserRouter([
               { path: '/subscriptions/new', element: <CreateSubscription /> },
               { path: '/payment', element: <PaymentDetails /> },
               { path: '/my-subscriptions', element: <MySubscriptions /> },
-              { path: '/banner/:id', element: <PromotionalBanner /> },
+              {
+                path: '/banner/:id',
+                // Lazy: html-to-image is only needed by the banner exporter.
+                lazy: () =>
+                  import('./pages/PromotionalBanner').then((m) => ({
+                    Component: m.PromotionalBanner,
+                  })),
+              },
               { path: '/manage/:id', element: <ManageSubscription /> },
               { path: '/edit/:id', element: <EditSubscription /> },
             ],
