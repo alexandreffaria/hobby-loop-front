@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { useQuery } from '@tanstack/react-query'
 import { listProducts } from '../services/product.service'
 import type { CreateSubscriptionRequest, Subscription } from '../services/subscription.service'
-import { parsePriceCents, formatPriceStr } from '../lib/formatters'
+import { parsePriceCents, formatCurrency } from '../lib/formatters'
 
 interface SubscriptionFormProps {
   /** When provided, the form starts pre-filled (edit mode). Remount with a
@@ -28,7 +28,7 @@ export function SubscriptionForm({
     () => initial?.products.map((p) => p.id) ?? [],
   )
   const [description, setDescription] = useState(initial?.description ?? '')
-  const [priceStr, setPriceStr] = useState(initial ? formatPriceStr(initial.price_cents) : '')
+  const [priceStr, setPriceStr] = useState(initial ? formatCurrency(initial.price_cents) : '')
   const [clientError, setClientError] = useState('')
 
   const { data: products = [] } = useQuery({
