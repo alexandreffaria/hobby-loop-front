@@ -89,10 +89,16 @@ export function Register() {
       </h1>
 
       {/* Fields */}
+      <form
+        onSubmit={(e) => { e.preventDefault(); handleSubmit() }}
+        className="flex w-full flex-col items-center"
+      >
       <div className="border-brand-pink/60 bg-brand-input w-full overflow-hidden rounded-xl border shadow-2xl">
         <input
           type="text"
           placeholder="Seu nome"
+          aria-label="Seu nome"
+          autoComplete="name"
           value={name}
           onChange={(e) => setName(e.target.value)}
           className={inputClass}
@@ -101,6 +107,8 @@ export function Register() {
         <input
           type="text"
           placeholder="Sua empresa"
+          aria-label="Sua empresa"
+          autoComplete="organization"
           value={company}
           onChange={(e) => setCompany(e.target.value)}
           className={inputClass}
@@ -138,6 +146,7 @@ export function Register() {
           key={taxIdType}
           mask={taxIdType === 'CPF' ? '000.000.000-00' : '00.000.000/0000-00'}
           placeholder={taxIdType === 'CPF' ? '000.000.000-00' : '00.000.000/0000-00'}
+          aria-label={taxIdType}
           value={taxId}
           onAccept={(value: string) => setTaxId(value)}
           className={inputClass}
@@ -146,6 +155,7 @@ export function Register() {
         <IMaskInput
           mask="(00) 00000-0000"
           placeholder="(00) 00000-0000"
+          aria-label="Telefone"
           value={phone}
           onAccept={(value: string) => setPhone(value)}
           className={inputClass}
@@ -154,6 +164,8 @@ export function Register() {
         <input
           type="email"
           placeholder="E-mail"
+          aria-label="E-mail"
+          autoComplete="email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           className={inputClass}
@@ -162,6 +174,8 @@ export function Register() {
         <input
           type="text"
           placeholder="Endereço"
+          aria-label="Endereço"
+          autoComplete="street-address"
           value={address}
           onChange={(e) => setAddress(e.target.value)}
           className={inputClass}
@@ -170,6 +184,8 @@ export function Register() {
         <input
           type="password"
           placeholder="Senha (mínimo 8 caracteres)"
+          aria-label="Senha"
+          autoComplete="new-password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
           className={inputClass}
@@ -178,9 +194,10 @@ export function Register() {
         <input
           type="password"
           placeholder="Confirmar senha"
+          aria-label="Confirmar senha"
+          autoComplete="new-password"
           value={confirmPassword}
           onChange={(e) => setConfirmPassword(e.target.value)}
-          onKeyDown={(e) => e.key === 'Enter' && handleSubmit()}
           className="w-full bg-transparent p-4 text-sm text-gray-200 placeholder-gray-500 outline-none transition-colors focus:bg-white/5"
         />
       </div>
@@ -190,12 +207,13 @@ export function Register() {
       )}
 
       <button
-        onClick={handleSubmit}
+        type="submit"
         disabled={mutation.isPending}
         className="from-brand-pink to-brand-blue mt-6 w-full rounded-xl bg-linear-to-r py-4 text-sm font-bold text-white shadow-lg transition-all hover:scale-[1.02] hover:shadow-xl active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-60"
       >
         {mutation.isPending ? 'Criando conta...' : 'Criar conta'}
       </button>
+      </form>
 
       {/* Google button (non-functional) */}
       <button

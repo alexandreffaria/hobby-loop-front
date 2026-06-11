@@ -39,40 +39,48 @@ export function Login() {
       </h1>
 
       {/* Fields */}
-      <div className="border-brand-pink/60 bg-brand-input w-full overflow-hidden rounded-xl border shadow-2xl">
-        <input
-          type="email"
-          placeholder="E-mail"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          className="w-full border-b border-gray-700/60 bg-transparent p-4 text-sm text-gray-200 placeholder-gray-500 outline-none transition-colors focus:bg-white/5"
-        />
-        <input
-          type="password"
-          placeholder="Senha"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          onKeyDown={(e) => e.key === 'Enter' && handleSubmit()}
-          className="w-full bg-transparent p-4 text-sm text-gray-200 placeholder-gray-500 outline-none transition-colors focus:bg-white/5"
-        />
-      </div>
-
-      {(clientError || mutation.isError) && (
-        <p className="mt-3 text-sm text-red-400">
-          {clientError ||
-            (axios.isAxiosError(mutation.error)
-              ? (mutation.error.response?.data?.error ?? 'E-mail ou senha inválidos.')
-              : 'E-mail ou senha inválidos.')}
-        </p>
-      )}
-
-      <button
-        onClick={handleSubmit}
-        disabled={mutation.isPending}
-        className="from-brand-pink to-brand-blue mt-6 w-full rounded-xl bg-linear-to-r py-4 text-sm font-bold text-white shadow-lg transition-all hover:scale-[1.02] hover:shadow-xl active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-60"
+      <form
+        onSubmit={(e) => { e.preventDefault(); handleSubmit() }}
+        className="flex w-full flex-col items-center"
       >
-        {mutation.isPending ? 'Entrando...' : 'Entrar'}
-      </button>
+        <div className="border-brand-pink/60 bg-brand-input w-full overflow-hidden rounded-xl border shadow-2xl">
+          <input
+            type="email"
+            placeholder="E-mail"
+            aria-label="E-mail"
+            autoComplete="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            className="w-full border-b border-gray-700/60 bg-transparent p-4 text-sm text-gray-200 placeholder-gray-500 outline-none transition-colors focus:bg-white/5"
+          />
+          <input
+            type="password"
+            placeholder="Senha"
+            aria-label="Senha"
+            autoComplete="current-password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            className="w-full bg-transparent p-4 text-sm text-gray-200 placeholder-gray-500 outline-none transition-colors focus:bg-white/5"
+          />
+        </div>
+
+        {(clientError || mutation.isError) && (
+          <p className="mt-3 text-sm text-red-400">
+            {clientError ||
+              (axios.isAxiosError(mutation.error)
+                ? (mutation.error.response?.data?.error ?? 'E-mail ou senha inválidos.')
+                : 'E-mail ou senha inválidos.')}
+          </p>
+        )}
+
+        <button
+          type="submit"
+          disabled={mutation.isPending}
+          className="from-brand-pink to-brand-blue mt-6 w-full rounded-xl bg-linear-to-r py-4 text-sm font-bold text-white shadow-lg transition-all hover:scale-[1.02] hover:shadow-xl active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-60"
+        >
+          {mutation.isPending ? 'Entrando...' : 'Entrar'}
+        </button>
+      </form>
 
       {/* Google button (non-functional) */}
       <button
