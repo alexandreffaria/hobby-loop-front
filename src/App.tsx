@@ -13,6 +13,7 @@ import { PromotionalBanner } from './pages/PromotionalBanner'
 import { ManageSubscription } from './pages/ManageSubscription'
 import { EditSubscription } from './pages/EditSubscription'
 import { SubscribePage } from './pages/SubscribePage'
+import { SubscribePayment } from './pages/SubscribePayment'
 import { SubscribeSuccess } from './pages/SubscribeSuccess'
 import { ErrorBoundary } from './components/ErrorBoundary'
 
@@ -39,6 +40,7 @@ const router = createBrowserRouter([
         element: <PublicLayout />,
         children: [
           { path: '/s/:id', element: <SubscribePage /> },
+          { path: '/s/:id/pagamento', element: <SubscribePayment /> },
           { path: '/s/:id/sucesso', element: <SubscribeSuccess /> },
         ],
       },
