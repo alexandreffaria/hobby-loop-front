@@ -40,12 +40,14 @@ function BannerCard({ plan }: { plan: Subscription }) {
       </p>
 
       {/* Product trio, center bottle taller — echoes the mockup photo */}
-      <div className="mt-6 flex items-end justify-center gap-3">
-        <span className="origin-bottom scale-75">
+      <div className="mt-12 mb-4 flex items-end justify-center gap-7">
+        <span className="origin-bottom scale-110">
           <ProductBottlePlaceholder />
         </span>
-        <ProductBottlePlaceholder />
-        <span className="origin-bottom scale-75">
+        <span className="origin-bottom scale-150">
+          <ProductBottlePlaceholder />
+        </span>
+        <span className="origin-bottom scale-110">
           <ProductBottlePlaceholder />
         </span>
       </div>
@@ -104,7 +106,7 @@ export function BannerArtboard({ plan, format, ref }: BannerArtboardProps) {
                 <BannerHeadline />
                 <BannerLink planId={plan.id} />
               </div>
-              <div className="scale-[0.78]">
+              <div className="scale-[0.85]">
                 <BannerCard plan={plan} />
               </div>
             </>
