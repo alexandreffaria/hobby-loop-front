@@ -34,7 +34,7 @@ function BannerLink({ planId }: { planId: string }) {
 
 function BannerCard({ plan }: { plan: Subscription }) {
   return (
-    <div className="border-brand-pink relative w-[400px] rounded-3xl border-4 bg-white px-8 pt-8 pb-14 text-center shadow-2xl">
+    <div className="border-brand-pink relative w-[400px] rounded-3xl border-4 bg-white px-8 pt-8 pb-24 text-center shadow-2xl">
       <p className="text-xs font-bold tracking-[0.25em] text-gray-400 uppercase">{plan.name}</p>
       <p className="mt-1 text-sm font-bold text-[#1e2b6e]">
         {plan.products.map((p) => p.name).join(' · ')}
