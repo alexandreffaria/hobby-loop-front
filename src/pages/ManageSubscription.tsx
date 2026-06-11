@@ -60,7 +60,11 @@ export function ManageSubscription() {
     ? getApiErrorMessage(deleteMutation.error, 'Erro ao excluir.')
     : null
 
-  const { data: subscribers, isError: subscribersError } = useQuery({
+  const {
+    data: subscribers,
+    isPending: subscribersPending,
+    isError: subscribersError,
+  } = useQuery({
     queryKey: ['subscriptions', id, 'subscribers'],
     queryFn: () => listSubscribers(id!),
     enabled: !!id,
@@ -116,7 +120,9 @@ export function ManageSubscription() {
         <p className="mb-2 text-[11px] font-medium tracking-widest text-gray-500 uppercase">
           Assinantes
         </p>
-        {subscribers && subscribers.length > 0 ? (
+        {subscribersPending ? (
+          <div className="bg-brand-input h-16 w-full animate-pulse rounded-2xl border border-white/5" />
+        ) : subscribers && subscribers.length > 0 ? (
           <div className="bg-brand-input overflow-hidden rounded-2xl border border-white/10 shadow-2xl">
             {subscribers.map((s) => (
               <SubscriberRow key={s.id} subscriber={s} />

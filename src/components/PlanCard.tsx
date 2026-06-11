@@ -1,4 +1,3 @@
-import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { QRCodeSVG } from 'qrcode.react'
 import { ProductBottlePlaceholder } from './ProductBottlePlaceholder'
@@ -33,15 +32,14 @@ function PencilIcon() {
 }
 
 export function PlanCard({ id, name, description, priceCents, onEdit, onManage }: PlanCardProps) {
-  const [hovered, setHovered] = useState(false)
-
   return (
     <div className="flex flex-col items-center gap-3">
       {/* Outer dark shell */}
       <div
-        className="bg-brand-input relative w-full overflow-hidden rounded-[40px] border border-white/10 shadow-2xl transition-transform duration-200 hover:scale-[1.02] cursor-pointer"
+        className="group bg-brand-input relative w-full overflow-hidden rounded-[40px] border border-white/10 shadow-2xl transition-transform duration-200 hover:scale-[1.02] cursor-pointer"
         role="button"
         tabIndex={0}
+        aria-label={`Gerenciar ${name}`}
         onClick={onManage}
         onKeyDown={(e) => {
           if (e.key === 'Enter' || e.key === ' ') {
@@ -49,21 +47,16 @@ export function PlanCard({ id, name, description, priceCents, onEdit, onManage }
             onManage()
           }
         }}
-        onMouseEnter={() => setHovered(true)}
-        onMouseLeave={() => setHovered(false)}
       >
-        {/* Edit button — fades in on hover */}
+        {/* Edit button — revealed on card hover or keyboard focus, so it is
+            never an invisible tab stop */}
         <button
           onClick={(e) => {
             e.stopPropagation()
             onEdit()
           }}
           aria-label="Editar assinatura"
-          className={`absolute top-3 right-3 z-10 flex h-7 w-7 items-center justify-center rounded-full bg-white text-gray-700 shadow-md transition-all duration-200 hover:scale-110 hover:bg-gray-50 ${
-            hovered
-              ? 'opacity-100 translate-y-0'
-              : 'opacity-0 -translate-y-1 pointer-events-none'
-          }`}
+          className="absolute top-3 right-3 z-10 flex h-7 w-7 items-center justify-center rounded-full bg-white text-gray-700 shadow-md transition-all duration-200 hover:scale-110 hover:bg-gray-50 opacity-0 -translate-y-1 group-hover:opacity-100 group-hover:translate-y-0 focus-visible:opacity-100 focus-visible:translate-y-0"
         >
           <PencilIcon />
         </button>
@@ -122,7 +115,7 @@ export function PlanCard({ id, name, description, priceCents, onEdit, onManage }
         className="flex w-full items-center justify-center gap-1.5 rounded-full bg-blue-600 py-2 text-xs font-bold text-white shadow-lg transition-all duration-150 hover:bg-blue-700 active:scale-95"
       >
         Compartilhar
-        <span>✈</span>
+        <span aria-hidden="true">✈</span>
       </Link>
     </div>
   )

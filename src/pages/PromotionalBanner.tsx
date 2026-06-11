@@ -37,7 +37,7 @@ export function PromotionalBanner() {
 
   const {
     data: plan,
-    isLoading,
+    isPending,
     isError,
   } = useQuery({
     queryKey: ['subscriptions', id],
@@ -63,7 +63,7 @@ export function PromotionalBanner() {
     }
   }
 
-  if (isLoading) {
+  if (isPending) {
     return (
       <p className="animate-page-enter py-20 text-center text-sm text-gray-400">
         Carregando banner…
@@ -97,6 +97,7 @@ export function PromotionalBanner() {
         {BANNER_FORMATS.map((f) => (
           <button
             key={f.id}
+            aria-pressed={format.id === f.id}
             onClick={() => setFormat(f)}
             className={`rounded-full px-4 py-2 text-xs font-bold transition-all duration-150 ${
               format.id === f.id

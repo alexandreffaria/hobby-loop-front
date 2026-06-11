@@ -97,6 +97,7 @@ export function SubscriptionForm({
                 <button
                   key={p.id}
                   type="button"
+                  aria-pressed={selected}
                   onClick={() => toggleProduct(p.id)}
                   className={`rounded-full border px-3 py-1.5 text-xs font-medium transition-all duration-150 ${
                     selected

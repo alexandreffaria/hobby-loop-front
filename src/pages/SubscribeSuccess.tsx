@@ -13,7 +13,9 @@ export function SubscribeSuccess() {
 
   return (
     <div className="animate-page-enter mx-auto flex w-full max-w-sm flex-col items-center px-6 py-20 text-center">
-      <span className="mb-6 text-6xl">🎉</span>
+      <span className="mb-6 text-6xl" aria-hidden="true">
+        🎉
+      </span>
       <h1 className="text-brand-gradient mb-4 text-2xl font-black">Assinatura confirmada!</h1>
       {plan ? (
         <p className="text-sm text-gray-400">

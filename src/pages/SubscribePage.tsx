@@ -39,7 +39,7 @@ export function SubscribePage() {
 
   const {
     data: plan,
-    isLoading,
+    isPending,
     isError,
   } = useQuery({
     queryKey: ['public-subscription', id],
@@ -77,7 +77,7 @@ export function SubscribePage() {
     })
   }
 
-  if (isLoading) {
+  if (isPending) {
     return (
       <p className="animate-page-enter py-20 text-center text-sm text-gray-400">
         Carregando plano…

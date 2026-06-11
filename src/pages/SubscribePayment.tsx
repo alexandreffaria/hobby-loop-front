@@ -57,7 +57,7 @@ export function SubscribePayment() {
 
   const {
     data: plan,
-    isLoading,
+    isPending,
     isError,
   } = useQuery({
     queryKey: ['public-subscription', id],
@@ -76,7 +76,7 @@ export function SubscribePayment() {
     return <Navigate to={`/s/${id}`} replace />
   }
 
-  if (isLoading) {
+  if (isPending) {
     return (
       <p className="animate-page-enter py-20 text-center text-sm text-gray-400">
         Carregando pagamento…
