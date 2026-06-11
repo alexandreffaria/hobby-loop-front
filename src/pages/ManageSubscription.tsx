@@ -2,8 +2,35 @@ import { useNavigate, useParams, Link } from 'react-router-dom'
 import { useMutation, useQuery } from '@tanstack/react-query'
 import axios from 'axios'
 import { deleteSubscription, getSubscription } from '../services/subscription.service'
+import { listSubscribers, type Subscriber } from '../services/subscriber.service'
 import { queryClient } from '../lib/queryClient'
 import { formatCurrency } from '../lib/formatters'
+
+function SubscriberRow({ subscriber }: { subscriber: Subscriber }) {
+  const active = subscriber.status === 'active'
+  return (
+    <div className="flex items-center justify-between gap-3 border-b border-white/5 px-5 py-3 last:border-b-0">
+      <div className="min-w-0">
+        <p className="truncate text-sm font-medium text-white">{subscriber.name}</p>
+        <p className="truncate text-xs text-gray-500">{subscriber.email}</p>
+      </div>
+      <div className="flex shrink-0 flex-col items-end gap-1">
+        <span
+          className={`rounded-full border px-2.5 py-0.5 text-[10px] font-bold tracking-wide uppercase ${
+            active
+              ? 'border-brand-pink bg-brand-pink/15 text-brand-pink'
+              : 'border-white/10 bg-white/5 text-gray-400'
+          }`}
+        >
+          {active ? 'Ativa' : 'Aguardando pagamento'}
+        </span>
+        <span className="text-[10px] text-gray-500">
+          {new Date(subscriber.created_at).toLocaleDateString('pt-BR')}
+        </span>
+      </div>
+    </div>
+  )
+}
 
 export function ManageSubscription() {
   const { id } = useParams<{ id: string }>()
@@ -34,6 +61,12 @@ export function ManageSubscription() {
       ? (deleteMutation.error.response?.data?.error ?? 'Erro ao excluir.')
       : 'Erro ao excluir.'
     : null
+
+  const { data: subscribers, isError: subscribersError } = useQuery({
+    queryKey: ['subscriptions', id, 'subscribers'],
+    queryFn: () => listSubscribers(id!),
+    enabled: !!id,
+  })
 
   return (
     <div className="mx-auto w-full max-w-lg px-4 pb-16 pt-10 sm:px-6">
@@ -81,10 +114,25 @@ export function ManageSubscription() {
         </div>
       )}
 
-      <div className="mt-8 rounded-2xl border border-white/5 bg-white/[0.02] px-5 py-8 text-center">
-        <p className="text-sm text-gray-500">
-          Assinantes aparecem aqui quando alguém se inscrever neste plano.
+      <div className="mt-8">
+        <p className="mb-2 text-[11px] font-medium tracking-widest text-gray-500 uppercase">
+          Assinantes
         </p>
+        {subscribers && subscribers.length > 0 ? (
+          <div className="bg-brand-input overflow-hidden rounded-2xl border border-white/10 shadow-2xl">
+            {subscribers.map((s) => (
+              <SubscriberRow key={s.id} subscriber={s} />
+            ))}
+          </div>
+        ) : (
+          <div className="rounded-2xl border border-white/5 bg-white/[0.02] px-5 py-8 text-center">
+            <p className="text-sm text-gray-500">
+              {subscribersError
+                ? 'Não foi possível carregar os assinantes.'
+                : 'Assinantes aparecem aqui quando alguém se inscrever neste plano.'}
+            </p>
+          </div>
+        )}
       </div>
 
       {deleteError && (
