@@ -1,6 +1,6 @@
 import { useNavigate, useParams, Link } from 'react-router-dom'
 import { useMutation, useQuery } from '@tanstack/react-query'
-import axios from 'axios'
+import { getApiErrorMessage } from '../lib/apiError'
 import { deleteSubscription, getSubscription } from '../services/subscription.service'
 import { listSubscribers, type Subscriber } from '../services/subscriber.service'
 import { queryClient } from '../lib/queryClient'
@@ -57,9 +57,7 @@ export function ManageSubscription() {
   }
 
   const deleteError = deleteMutation.isError
-    ? axios.isAxiosError(deleteMutation.error)
-      ? (deleteMutation.error.response?.data?.error ?? 'Erro ao excluir.')
-      : 'Erro ao excluir.'
+    ? getApiErrorMessage(deleteMutation.error, 'Erro ao excluir.')
     : null
 
   const { data: subscribers, isError: subscribersError } = useQuery({

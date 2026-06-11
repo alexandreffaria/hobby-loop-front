@@ -1,14 +1,15 @@
 import { useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import { useMutation, useQuery } from '@tanstack/react-query'
-import axios from 'axios'
 import {
   createSubscriber,
   getPublicSubscription,
   type CreateSubscriberRequest,
 } from '../services/subscriber.service'
 import { ProductBottlePlaceholder } from '../components/ProductBottlePlaceholder'
+import { GradientButton } from '../components/GradientButton'
 import { formatCurrency } from '../lib/formatters'
+import { getApiErrorMessage } from '../lib/apiError'
 
 const inputClass =
   'w-full bg-transparent p-4 text-sm text-white outline-none placeholder:text-gray-500 focus:bg-white/5'
@@ -53,9 +54,7 @@ export function SubscribePage() {
   })
 
   const serverError = mutation.isError
-    ? axios.isAxiosError(mutation.error)
-      ? (mutation.error.response?.data?.error ?? 'Erro ao enviar seus dados.')
-      : 'Erro ao enviar seus dados.'
+    ? getApiErrorMessage(mutation.error, 'Erro ao enviar seus dados.')
     : null
 
   const handleSubmit = () => {
@@ -190,13 +189,9 @@ export function SubscribePage() {
           <p className="mb-4 text-center text-sm text-red-400">{clientError || serverError}</p>
         )}
 
-        <button
-          type="submit"
-          disabled={mutation.isPending}
-          className="from-brand-pink to-brand-blue w-full rounded-xl bg-linear-to-r py-4 text-sm font-bold text-white shadow-lg transition-all hover:scale-[1.02] hover:shadow-xl active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-60"
-        >
+        <GradientButton type="submit" disabled={mutation.isPending}>
           {mutation.isPending ? 'Enviando...' : 'Continuar para pagamento →'}
-        </button>
+        </GradientButton>
       </form>
     </div>
   )

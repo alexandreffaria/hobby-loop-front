@@ -1,6 +1,6 @@
 import { Link, useNavigate, useParams } from 'react-router-dom'
 import { useMutation, useQuery } from '@tanstack/react-query'
-import axios from 'axios'
+import { getApiErrorMessage } from '../lib/apiError'
 import { getSubscription, updateSubscription, type UpdateSubscriptionRequest } from '../services/subscription.service'
 import { queryClient } from '../lib/queryClient'
 import { SubscriptionForm } from '../components/SubscriptionForm'
@@ -24,9 +24,7 @@ export function EditSubscription() {
   })
 
   const serverError = mutation.isError
-    ? axios.isAxiosError(mutation.error)
-      ? (mutation.error.response?.data?.error ?? 'Erro ao salvar assinatura.')
-      : 'Erro ao salvar assinatura.'
+    ? getApiErrorMessage(mutation.error, 'Erro ao salvar assinatura.')
     : null
 
   return (

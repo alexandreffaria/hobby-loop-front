@@ -1,11 +1,12 @@
 import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { useMutation } from '@tanstack/react-query'
-import axios from 'axios'
 import * as authService from '../services/auth.service'
 import type { LoginRequest } from '../services/auth.service'
 import { setToken } from '../lib/token'
+import { getApiErrorMessage } from '../lib/apiError'
 import { BrandLogo } from '../components/BrandLogo'
+import { GradientButton } from '../components/GradientButton'
 
 export function Login() {
   const navigate = useNavigate()
@@ -67,19 +68,13 @@ export function Login() {
         {(clientError || mutation.isError) && (
           <p className="mt-3 text-sm text-red-400">
             {clientError ||
-              (axios.isAxiosError(mutation.error)
-                ? (mutation.error.response?.data?.error ?? 'E-mail ou senha inválidos.')
-                : 'E-mail ou senha inválidos.')}
+              getApiErrorMessage(mutation.error, 'E-mail ou senha inválidos.')}
           </p>
         )}
 
-        <button
-          type="submit"
-          disabled={mutation.isPending}
-          className="from-brand-pink to-brand-blue mt-6 w-full rounded-xl bg-linear-to-r py-4 text-sm font-bold text-white shadow-lg transition-all hover:scale-[1.02] hover:shadow-xl active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-60"
-        >
+        <GradientButton type="submit" disabled={mutation.isPending} className="mt-6">
           {mutation.isPending ? 'Entrando...' : 'Entrar'}
-        </button>
+        </GradientButton>
       </form>
 
       {/* Google button (non-functional) */}

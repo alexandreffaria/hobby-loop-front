@@ -1,5 +1,7 @@
 import { useState } from 'react'
 import { useQuery } from '@tanstack/react-query'
+import { ErrorBanner } from './ErrorBanner'
+import { GradientButton } from './GradientButton'
 import { listProducts } from '../services/product.service'
 import type { CreateSubscriptionRequest, Subscription } from '../services/subscription.service'
 import { parsePriceCents, formatCurrency } from '../lib/formatters'
@@ -143,18 +145,12 @@ export function SubscriptionForm({
       </div>
 
       {(clientError || serverError) && (
-        <div className="mt-4 rounded-xl border border-red-500/20 bg-red-500/10 px-4 py-3">
-          <p className="text-sm text-red-400">{clientError || serverError}</p>
-        </div>
+        <ErrorBanner message={clientError || serverError || ''} className="mt-4" />
       )}
 
-      <button
-        type="submit"
-        disabled={isPending}
-        className="from-brand-pink to-brand-blue mt-6 w-full rounded-xl bg-linear-to-r py-4 text-sm font-bold text-white shadow-lg transition-all hover:scale-[1.02] hover:shadow-xl active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-60"
-      >
+      <GradientButton type="submit" disabled={isPending} className="mt-6">
         {isPending ? pendingLabel : submitLabel}
-      </button>
+      </GradientButton>
     </form>
   )
 }

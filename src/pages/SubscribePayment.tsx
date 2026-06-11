@@ -5,15 +5,14 @@ import axios from 'axios'
 import { loadStripe } from '@stripe/stripe-js'
 import { Elements, PaymentElement, useElements } from '@stripe/react-stripe-js'
 import { getPublicSubscription, paySubscriberCheckout } from '../services/subscriber.service'
+import { GradientButton } from '../components/GradientButton'
 import { formatCurrency } from '../lib/formatters'
+import { getApiErrorMessage } from '../lib/apiError'
 
-const publishableKey = import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY as string | undefined
+const publishableKey = import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY
 // Without a publishable key the Stripe UI cannot load; the page falls back
 // to a demo button that exercises the same (mocked) payment endpoint.
 const stripePromise = publishableKey ? loadStripe(publishableKey) : null
-
-const payButtonClass =
-  'from-brand-pink to-brand-blue mt-6 w-full rounded-xl bg-linear-to-r py-4 text-sm font-bold text-white shadow-lg transition-all hover:scale-[1.02] hover:shadow-xl active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-60'
 
 interface PayMutation {
   mutate: () => void
@@ -43,9 +42,9 @@ function StripeCheckoutForm({ payMutation }: { payMutation: PayMutation }) {
     <form onSubmit={handleSubmit} className="w-full">
       <PaymentElement />
       {formError && <p className="mt-3 text-center text-sm text-red-400">{formError}</p>}
-      <button type="submit" disabled={!elements || payMutation.isPending} className={payButtonClass}>
+      <GradientButton type="submit" disabled={!elements || payMutation.isPending} className="mt-6">
         {payMutation.isPending ? 'Processando...' : 'Realizar pagamento'}
-      </button>
+      </GradientButton>
     </form>
   )
 }
@@ -96,7 +95,7 @@ export function SubscribePayment() {
   const payError = payMutation.isError
     ? axios.isAxiosError(payMutation.error) && payMutation.error.response?.status === 409
       ? 'Este e-mail já possui uma assinatura ativa deste plano.'
-      : 'Não foi possível processar o pagamento. Tente novamente.'
+      : getApiErrorMessage(payMutation.error, 'Não foi possível processar o pagamento. Tente novamente.')
     : null
 
   return (
@@ -146,13 +145,13 @@ export function SubscribePayment() {
             <p className="text-center text-xs text-gray-500">
               Formulário de cartão indisponível — modo demonstração.
             </p>
-            <button
+            <GradientButton
               onClick={() => payMutation.mutate()}
               disabled={payMutation.isPending}
-              className={payButtonClass}
+              className="mt-6"
             >
               {payMutation.isPending ? 'Processando...' : 'Pagar (demonstração)'}
-            </button>
+            </GradientButton>
           </div>
         )}
 
