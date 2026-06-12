@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useRef, useState } from 'react'
 import { Navigate, useLocation, useNavigate, useParams } from 'react-router-dom'
 import { useMutation, useQuery } from '@tanstack/react-query'
 import axios from 'axios'
@@ -16,26 +16,37 @@ const stripePromise = publishableKey ? loadStripe(publishableKey) : null
 
 interface PayMutation {
   mutate: () => void
+  mutateAsync: () => Promise<unknown>
   isPending: boolean
 }
 
 function StripeCheckoutForm({ payMutation }: { payMutation: PayMutation }) {
   const elements = useElements()
   const [formError, setFormError] = useState('')
+  // Set synchronously before the await below: isPending only flips after
+  // mutate() runs, so without this a double-click fires two payments.
+  const inFlight = useRef(false)
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    if (!elements) return
+    if (!elements || inFlight.current) return
+    inFlight.current = true
     setFormError('')
 
-    const { error } = await elements.submit() // Stripe-side field validation
-    if (error) {
-      setFormError(error.message ?? 'Verifique os dados do cartão.')
-      return
+    try {
+      const { error } = await elements.submit() // Stripe-side field validation
+      if (error) {
+        setFormError(error.message ?? 'Verifique os dados do cartão.')
+        return
+      }
+      // MOCK PAYMENT SEAM — with real Stripe this becomes stripe.confirmPayment
+      // against a PaymentIntent created by the payments API.
+      // Awaited so the in-flight guard covers the whole payment; the
+      // mutation's own error state renders the failure message.
+      await payMutation.mutateAsync().catch(() => {})
+    } finally {
+      inFlight.current = false
     }
-    // MOCK PAYMENT SEAM — with real Stripe this becomes stripe.confirmPayment
-    // against a PaymentIntent created by the payments API.
-    payMutation.mutate()
   }
 
   return (

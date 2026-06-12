@@ -1,4 +1,5 @@
 import { api } from '../lib/api'
+import { publicApi } from '../lib/publicApi'
 import { paymentsApi } from '../lib/paymentsApi'
 import type { Subscription } from './subscription.service'
 
@@ -29,13 +30,15 @@ export interface SubscriberPayment {
 }
 
 export const getPublicSubscription = (id: string): Promise<Subscription> =>
-  api.get<{ data: Subscription }>(`/api/v1/public/subscriptions/${id}`).then((r) => r.data.data)
+  publicApi
+    .get<{ data: Subscription }>(`/api/v1/public/subscriptions/${id}`)
+    .then((r) => r.data.data)
 
 export const createSubscriber = (
   subscriptionId: string,
   body: CreateSubscriberRequest,
 ): Promise<Subscriber> =>
-  api
+  publicApi
     .post<{ data: Subscriber }>(`/api/v1/public/subscriptions/${subscriptionId}/subscribers`, body)
     .then((r) => r.data.data)
 
