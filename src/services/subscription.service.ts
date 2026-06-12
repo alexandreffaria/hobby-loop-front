@@ -11,6 +11,7 @@ export interface Subscription {
   description: string
   price_cents: number
   products: ProductRef[]
+  active_subscribers: number
   created_at: string
 }
 

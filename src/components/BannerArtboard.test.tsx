@@ -15,6 +15,7 @@ const plan: Subscription = {
     { id: 'p2', name: 'Sabonete' },
     { id: 'p3', name: 'Hidratante' },
   ],
+  active_subscribers: 0,
   created_at: '2026-01-01T00:00:00Z',
 }
 

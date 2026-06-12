@@ -63,6 +63,7 @@ export function Subscriptions() {
             name={sub.name}
             description={sub.description}
             priceCents={sub.price_cents}
+            activeSubscribers={sub.active_subscribers}
             onEdit={() => navigate(`/edit/${sub.id}`)}
             onManage={() => navigate(`/manage/${sub.id}`)}
           />

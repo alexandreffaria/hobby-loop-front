@@ -9,6 +9,7 @@ interface PlanCardProps {
   name: string
   description: string
   priceCents: number
+  activeSubscribers: number
   onEdit: () => void
   onManage: () => void
 }
@@ -31,7 +32,15 @@ function PencilIcon() {
   )
 }
 
-export function PlanCard({ id, name, description, priceCents, onEdit, onManage }: PlanCardProps) {
+export function PlanCard({
+  id,
+  name,
+  description,
+  priceCents,
+  activeSubscribers,
+  onEdit,
+  onManage,
+}: PlanCardProps) {
   return (
     <div className="flex flex-col items-center gap-3">
       {/* Outer dark shell */}
@@ -48,6 +57,18 @@ export function PlanCard({ id, name, description, priceCents, onEdit, onManage }
           }
         }}
       >
+        {/* Active subscriber count */}
+        <span
+          aria-label={`${activeSubscribers} assinantes ativos`}
+          title={`${activeSubscribers} assinantes ativos`}
+          className="absolute top-3 left-3 z-10 flex items-center gap-1 rounded-full bg-white/10 px-2 py-0.5 text-[10px] font-bold text-white/80"
+        >
+          <svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+            <path d="M12 12a4 4 0 1 0-4-4 4 4 0 0 0 4 4zm0 2c-3.3 0-8 1.7-8 5v1h16v-1c0-3.3-4.7-5-8-5z" />
+          </svg>
+          {activeSubscribers}
+        </span>
+
         {/* Edit button — revealed on card hover or keyboard focus, so it is
             never an invisible tab stop */}
         <button

@@ -20,6 +20,7 @@ const plan: Subscription = {
   description: 'Kit mensal',
   price_cents: 7800,
   products: [{ id: 'p1', name: 'Desodorante' }],
+  active_subscribers: 0,
   created_at: '2026-01-01T00:00:00Z',
 }
 

@@ -13,6 +13,7 @@ const subscription: Subscription = {
     { id: 'p1', name: 'Desodorante' },
     { id: 'p2', name: 'Sabonete' },
   ],
+  active_subscribers: 0,
   created_at: '2026-01-01T00:00:00Z',
 }
 
