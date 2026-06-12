@@ -60,7 +60,14 @@ export function SubscribePage() {
 
   const handleSubmit = () => {
     setClientError('')
-    if (!name.trim() || !phone.trim() || !email.trim() || !address.trim() || !cep.trim()) {
+    if (
+      !name.trim() ||
+      !phone.trim() ||
+      !email.trim() ||
+      !confirmEmail.trim() ||
+      !address.trim() ||
+      !cep.trim()
+    ) {
       setClientError('Preencha todos os campos (complemento é opcional).')
       return
     }

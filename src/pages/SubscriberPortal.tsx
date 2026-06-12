@@ -6,17 +6,9 @@ import {
   type SubscriberPortal as SubscriberPortalData,
 } from '../services/subscriber.service'
 import { ErrorBanner } from '../components/ErrorBanner'
+import { StatusChip } from '../components/StatusChip'
 import { formatCurrency } from '../lib/formatters'
 import { getApiErrorMessage } from '../lib/apiError'
-
-const statusChip: Record<string, { label: string; className: string }> = {
-  active: { label: 'Ativa', className: 'border-brand-pink bg-brand-pink/15 text-brand-pink' },
-  pending_payment: {
-    label: 'Aguardando pagamento',
-    className: 'border-white/10 bg-white/5 text-gray-400',
-  },
-  canceled: { label: 'Cancelada', className: 'border-red-500/30 bg-red-500/10 text-red-400' },
-}
 
 export function SubscriberPortal() {
   const { token } = useParams<{ token: string }>()
@@ -65,7 +57,6 @@ export function SubscriberPortal() {
   }
 
   const { subscriber, plan } = portal
-  const chip = statusChip[subscriber.status] ?? statusChip.pending_payment
   const canceled = subscriber.status === 'canceled'
 
   return (
@@ -82,11 +73,7 @@ export function SubscriberPortal() {
               {plan.products.map((p) => p.name).join(' · ')}
             </p>
           </div>
-          <span
-            className={`shrink-0 rounded-full border px-2.5 py-0.5 text-[10px] font-bold tracking-wide uppercase ${chip.className}`}
-          >
-            {chip.label}
-          </span>
+          <StatusChip status={subscriber.status} />
         </div>
 
         <div className="border-b border-white/5 px-5 py-4">
@@ -112,7 +99,9 @@ export function SubscriberPortal() {
       </div>
 
       {canceled ? (
-        <p className="mt-6 text-center text-sm text-gray-400">Sua assinatura foi cancelada.</p>
+        <p role="status" className="mt-6 text-center text-sm text-gray-400">
+          Sua assinatura foi cancelada.
+        </p>
       ) : (
         <button
           onClick={handleCancel}
