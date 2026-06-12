@@ -26,6 +26,11 @@ describe('PlanCard', () => {
     expect(badge.textContent).toContain('3')
   })
 
+  it('uses the singular form for one subscriber', () => {
+    renderCard(1)
+    expect(screen.getByLabelText('1 assinante ativo')).toBeDefined()
+  })
+
   it('links the share button to the public banner page', () => {
     renderCard(0)
     const share = screen.getByRole('link', { name: /Compartilhar/ })

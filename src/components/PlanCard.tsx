@@ -4,6 +4,9 @@ import { ProductBottlePlaceholder } from './ProductBottlePlaceholder'
 import { formatCurrency } from '../lib/formatters'
 import { buildPublicLink, displayPublicLink } from '../lib/publicLink'
 
+const subscriberCountLabel = (n: number) =>
+  `${n} ${n === 1 ? 'assinante ativo' : 'assinantes ativos'}`
+
 interface PlanCardProps {
   id: string
   name: string
@@ -57,11 +60,12 @@ export function PlanCard({
           }
         }}
       >
-        {/* Active subscriber count */}
+        {/* Active subscriber count — overlays the white inner card, so it
+            needs a solid dark pill to stay legible */}
         <span
-          aria-label={`${activeSubscribers} assinantes ativos`}
-          title={`${activeSubscribers} assinantes ativos`}
-          className="absolute top-3 left-3 z-10 flex items-center gap-1 rounded-full bg-white/10 px-2 py-0.5 text-[10px] font-bold text-white/80"
+          aria-label={subscriberCountLabel(activeSubscribers)}
+          title={subscriberCountLabel(activeSubscribers)}
+          className="absolute top-3 left-3 z-10 flex items-center gap-1 rounded-full bg-gray-900/90 px-2 py-0.5 text-[10px] font-bold text-white shadow-md"
         >
           <svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
             <path d="M12 12a4 4 0 1 0-4-4 4 4 0 0 0 4 4zm0 2c-3.3 0-8 1.7-8 5v1h16v-1c0-3.3-4.7-5-8-5z" />
