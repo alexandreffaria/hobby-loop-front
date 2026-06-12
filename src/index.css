@@ -7,6 +7,15 @@
   --color-brand-blue: #009de0; /* The blue from the text/logo */
 }
 
+@layer base {
+  /* Tailwind v4 preflight leaves buttons with cursor: default; restore the
+     v3 behavior users expect. role="button" covers the clickable PlanCard. */
+  button:not(:disabled),
+  [role='button']:not(:disabled) {
+    cursor: pointer;
+  }
+}
+
 @utility text-brand-gradient {
   @apply from-brand-pink to-brand-blue bg-linear-to-r bg-clip-text text-transparent;
 }
