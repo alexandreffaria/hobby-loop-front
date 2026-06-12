@@ -4,6 +4,7 @@ import { getApiErrorMessage } from '../lib/apiError'
 import { deleteSubscription, getSubscription } from '../services/subscription.service'
 import { listSubscribers, type Subscriber } from '../services/subscriber.service'
 import { queryClient } from '../lib/queryClient'
+import { ErrorBanner } from '../components/ErrorBanner'
 import { formatCurrency } from '../lib/formatters'
 
 function SubscriberRow({ subscriber }: { subscriber: Subscriber }) {
@@ -85,11 +86,7 @@ export function ManageSubscription() {
         </h1>
       </div>
 
-      {isError && (
-        <div className="mb-6 rounded-xl border border-red-500/20 bg-red-500/10 px-4 py-3">
-          <p className="text-sm text-red-400">Não foi possível carregar a assinatura.</p>
-        </div>
-      )}
+      {isError && <ErrorBanner message="Não foi possível carregar a assinatura." className="mb-6" />}
 
       {subscription && (
         <div className="bg-brand-input overflow-hidden rounded-2xl border border-white/10 shadow-2xl">
@@ -139,11 +136,7 @@ export function ManageSubscription() {
         )}
       </div>
 
-      {deleteError && (
-        <div className="mt-4 rounded-xl border border-red-500/20 bg-red-500/10 px-4 py-3">
-          <p className="text-sm text-red-400">{deleteError}</p>
-        </div>
-      )}
+      {deleteError && <ErrorBanner message={deleteError} className="mt-4" />}
 
       <button
         onClick={handleDelete}

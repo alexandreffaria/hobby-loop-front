@@ -186,7 +186,9 @@ export function SubscribePage() {
         </InputGroup>
 
         {(clientError || serverError) && (
-          <p className="mb-4 text-center text-sm text-red-400">{clientError || serverError}</p>
+          <p role="alert" className="mb-4 text-center text-sm text-red-400">
+            {clientError || serverError}
+          </p>
         )}
 
         <GradientButton type="submit" disabled={mutation.isPending}>

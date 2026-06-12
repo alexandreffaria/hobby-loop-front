@@ -15,7 +15,9 @@ export function ErrorBoundary() {
       message = error.statusText || message
     }
   } else if (error instanceof Error) {
-    message = error.message
+    // Raw error messages (chunk-load failures, etc.) are English and
+    // developer-facing — log them, show users the generic pt-BR copy.
+    console.error('route error:', error)
   }
 
   return (

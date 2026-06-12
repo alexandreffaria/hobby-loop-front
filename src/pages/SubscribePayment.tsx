@@ -52,7 +52,11 @@ function StripeCheckoutForm({ payMutation }: { payMutation: PayMutation }) {
   return (
     <form onSubmit={handleSubmit} className="w-full">
       <PaymentElement />
-      {formError && <p className="mt-3 text-center text-sm text-red-400">{formError}</p>}
+      {formError && (
+        <p role="alert" className="mt-3 text-center text-sm text-red-400">
+          {formError}
+        </p>
+      )}
       <GradientButton type="submit" disabled={!elements || payMutation.isPending} className="mt-6">
         {payMutation.isPending ? 'Processando...' : 'Realizar pagamento'}
       </GradientButton>
@@ -166,7 +170,11 @@ export function SubscribePayment() {
           </div>
         )}
 
-        {payError && <p className="mt-3 text-center text-sm text-red-400">{payError}</p>}
+        {payError && (
+          <p role="alert" className="mt-3 text-center text-sm text-red-400">
+            {payError}
+          </p>
+        )}
       </div>
     </div>
   )

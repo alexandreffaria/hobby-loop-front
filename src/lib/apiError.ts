@@ -13,7 +13,10 @@ export const getApiErrorMessage = (error: unknown, fallback: string): string => 
     if (!error.response) {
       return 'Não foi possível conectar ao servidor. Tente novamente.'
     }
-    return error.response.data?.error ?? fallback
+    const message = error.response.data?.error
+    // Guard the type too: a proxy error page or malformed body must not
+    // render a non-string (or blank) as the message.
+    return typeof message === 'string' && message !== '' ? message : fallback
   }
   return fallback
 }

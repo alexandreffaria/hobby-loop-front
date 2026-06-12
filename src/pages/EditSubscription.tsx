@@ -3,6 +3,7 @@ import { useMutation, useQuery } from '@tanstack/react-query'
 import { getApiErrorMessage } from '../lib/apiError'
 import { getSubscription, updateSubscription, type UpdateSubscriptionRequest } from '../services/subscription.service'
 import { queryClient } from '../lib/queryClient'
+import { ErrorBanner } from '../components/ErrorBanner'
 import { SubscriptionForm } from '../components/SubscriptionForm'
 
 export function EditSubscription() {
@@ -46,11 +47,7 @@ export function EditSubscription() {
         <div className="bg-brand-input h-72 w-full animate-pulse rounded-2xl border border-white/5" />
       )}
 
-      {isError && (
-        <div className="rounded-xl border border-red-500/20 bg-red-500/10 px-4 py-3">
-          <p className="text-sm text-red-400">Não foi possível carregar a assinatura.</p>
-        </div>
-      )}
+      {isError && <ErrorBanner message="Não foi possível carregar a assinatura." />}
 
       {subscription && (
         <SubscriptionForm

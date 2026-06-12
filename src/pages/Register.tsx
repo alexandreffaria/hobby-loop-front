@@ -202,7 +202,7 @@ export function Register() {
       </div>
 
       {(clientError || serverError) && (
-        <p className="mt-3 text-sm text-red-400">{clientError || serverError}</p>
+        <p role="alert" className="mt-3 text-sm text-red-400">{clientError || serverError}</p>
       )}
 
       <GradientButton type="submit" disabled={mutation.isPending} className="mt-6">

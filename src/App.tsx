@@ -15,9 +15,21 @@ import { SubscribePage } from './pages/SubscribePage'
 import { SubscribeSuccess } from './pages/SubscribeSuccess'
 import { ErrorBoundary } from './components/ErrorBoundary'
 
+// Shown while an initially-matched lazy route's chunk loads (hard refresh /
+// direct entry on /banner/:id or /s/:id/pagamento) — without it the router
+// renders nothing until the chunk arrives.
+function HydrateFallback() {
+  return (
+    <div className="bg-brand-bg flex min-h-screen items-center justify-center">
+      <div className="from-brand-pink to-brand-blue h-8 w-8 animate-pulse rounded-full bg-linear-to-tr" />
+    </div>
+  )
+}
+
 const router = createBrowserRouter([
   {
     ErrorBoundary: ErrorBoundary,
+    HydrateFallback: HydrateFallback,
     children: [
       {
         path: '/',

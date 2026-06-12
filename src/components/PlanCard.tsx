@@ -56,7 +56,7 @@ export function PlanCard({ id, name, description, priceCents, onEdit, onManage }
             onEdit()
           }}
           aria-label="Editar assinatura"
-          className="absolute top-3 right-3 z-10 flex h-7 w-7 items-center justify-center rounded-full bg-white text-gray-700 shadow-md transition-all duration-200 hover:scale-110 hover:bg-gray-50 opacity-0 -translate-y-1 group-hover:opacity-100 group-hover:translate-y-0 focus-visible:opacity-100 focus-visible:translate-y-0"
+          className="absolute top-3 right-3 z-10 flex h-7 w-7 items-center justify-center rounded-full bg-white text-gray-700 shadow-md transition-all duration-200 hover:scale-110 hover:bg-gray-50 opacity-0 -translate-y-1 pointer-events-none group-hover:opacity-100 group-hover:translate-y-0 group-hover:pointer-events-auto focus-visible:opacity-100 focus-visible:translate-y-0 focus-visible:pointer-events-auto"
         >
           <PencilIcon />
         </button>

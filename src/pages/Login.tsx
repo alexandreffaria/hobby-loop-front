@@ -66,7 +66,7 @@ export function Login() {
         </div>
 
         {(clientError || mutation.isError) && (
-          <p className="mt-3 text-sm text-red-400">
+          <p role="alert" className="mt-3 text-sm text-red-400">
             {clientError ||
               getApiErrorMessage(mutation.error, 'E-mail ou senha inválidos.')}
           </p>
