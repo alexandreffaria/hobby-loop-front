@@ -7,8 +7,17 @@ import { queryClient } from '../lib/queryClient'
 import { ErrorBanner } from '../components/ErrorBanner'
 import { formatCurrency } from '../lib/formatters'
 
+const subscriberChip: Record<Subscriber['status'], { label: string; className: string }> = {
+  active: { label: 'Ativa', className: 'border-brand-pink bg-brand-pink/15 text-brand-pink' },
+  pending_payment: {
+    label: 'Aguardando pagamento',
+    className: 'border-white/10 bg-white/5 text-gray-400',
+  },
+  canceled: { label: 'Cancelada', className: 'border-red-500/30 bg-red-500/10 text-red-400' },
+}
+
 function SubscriberRow({ subscriber }: { subscriber: Subscriber }) {
-  const active = subscriber.status === 'active'
+  const chip = subscriberChip[subscriber.status] ?? subscriberChip.pending_payment
   return (
     <div className="flex items-center justify-between gap-3 border-b border-white/5 px-5 py-3 last:border-b-0">
       <div className="min-w-0">
@@ -17,13 +26,9 @@ function SubscriberRow({ subscriber }: { subscriber: Subscriber }) {
       </div>
       <div className="flex shrink-0 flex-col items-end gap-1">
         <span
-          className={`rounded-full border px-2.5 py-0.5 text-[10px] font-bold tracking-wide uppercase ${
-            active
-              ? 'border-brand-pink bg-brand-pink/15 text-brand-pink'
-              : 'border-white/10 bg-white/5 text-gray-400'
-          }`}
+          className={`rounded-full border px-2.5 py-0.5 text-[10px] font-bold tracking-wide uppercase ${chip.className}`}
         >
-          {active ? 'Ativa' : 'Aguardando pagamento'}
+          {chip.label}
         </span>
         <span className="text-[10px] text-gray-500">
           {new Date(subscriber.created_at).toLocaleDateString('pt-BR')}

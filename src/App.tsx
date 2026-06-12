@@ -13,6 +13,7 @@ import { ManageSubscription } from './pages/ManageSubscription'
 import { EditSubscription } from './pages/EditSubscription'
 import { SubscribePage } from './pages/SubscribePage'
 import { SubscribeSuccess } from './pages/SubscribeSuccess'
+import { SubscriberPortal } from './pages/SubscriberPortal'
 import { ErrorBoundary } from './components/ErrorBoundary'
 
 // Shown while an initially-matched lazy route's chunk loads (hard refresh /
@@ -59,6 +60,7 @@ const router = createBrowserRouter([
               })),
           },
           { path: '/s/:id/sucesso', element: <SubscribeSuccess /> },
+          { path: '/assinatura/:token', element: <SubscriberPortal /> },
         ],
       },
 

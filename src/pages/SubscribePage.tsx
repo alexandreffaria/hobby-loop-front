@@ -32,6 +32,7 @@ export function SubscribePage() {
   const [name, setName] = useState('')
   const [phone, setPhone] = useState('')
   const [email, setEmail] = useState('')
+  const [confirmEmail, setConfirmEmail] = useState('')
   const [address, setAddress] = useState('')
   const [cep, setCep] = useState('')
   const [complement, setComplement] = useState('')
@@ -65,6 +66,10 @@ export function SubscribePage() {
     }
     if (!/.+@.+\..+/.test(email.trim())) {
       setClientError('Informe um e-mail válido.')
+      return
+    }
+    if (email.trim().toLowerCase() !== confirmEmail.trim().toLowerCase()) {
+      setClientError('Os e-mails não coincidem.')
       return
     }
     mutation.mutate({
@@ -155,6 +160,15 @@ export function SubscribePage() {
             aria-label="E-mail"
             autoComplete="email"
             onChange={(e) => setEmail(e.target.value)}
+            className={inputClass}
+          />
+          <input
+            value={confirmEmail}
+            type="email"
+            placeholder="Confirmar e-mail"
+            aria-label="Confirmar e-mail"
+            autoComplete="off"
+            onChange={(e) => setConfirmEmail(e.target.value)}
             className={inputClass}
           />
         </InputGroup>

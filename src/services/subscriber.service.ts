@@ -16,8 +16,13 @@ export interface Subscriber {
   id: string
   name: string
   email: string
-  status: 'pending_payment' | 'active'
+  status: 'pending_payment' | 'active' | 'canceled'
   created_at: string
+}
+
+export interface SubscriberPortal {
+  subscriber: Subscriber
+  plan: Subscription
 }
 
 export interface SubscriberPayment {
@@ -47,6 +52,16 @@ export const paySubscriberCheckout = (subscriberId: string): Promise<SubscriberP
     .post<{ data: SubscriberPayment }>('/api/v1/public/subscriber-payments', {
       subscriber_id: subscriberId,
     })
+    .then((r) => r.data.data)
+
+export const getSubscriberPortal = (token: string): Promise<SubscriberPortal> =>
+  publicApi
+    .get<{ data: SubscriberPortal }>(`/api/v1/public/subscriber-portal/${token}`)
+    .then((r) => r.data.data)
+
+export const cancelSubscriberPortal = (token: string): Promise<Subscriber> =>
+  publicApi
+    .post<{ data: Subscriber }>(`/api/v1/public/subscriber-portal/${token}/cancel`)
     .then((r) => r.data.data)
 
 export const listSubscribers = (subscriptionId: string): Promise<Subscriber[]> =>
