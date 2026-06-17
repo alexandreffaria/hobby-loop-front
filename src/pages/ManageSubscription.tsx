@@ -11,11 +11,17 @@ import {
   type DeliveryStatus,
   type DeliverySubscriber,
 } from '../services/delivery.service'
+import {
+  updateSubscriber,
+  cancelSubscriber,
+  type UpdateSubscriberRequest,
+} from '../services/subscriber.service'
 import { buildShippingCsv, downloadTextFile } from '../lib/shippingCsv'
 import { queryClient } from '../lib/queryClient'
 import { ErrorBanner } from '../components/ErrorBanner'
 import { StatusSelector } from '../components/StatusSelector'
 import { PeriodNavigator } from '../components/PeriodNavigator'
+import { SubscriberEditModal } from '../components/SubscriberEditModal'
 import { formatCurrency } from '../lib/formatters'
 
 const subscriberCountLabel = (n: number) => `${n} ${n === 1 ? 'assinante' : 'assinantes'}`
@@ -30,16 +36,28 @@ function DeliveryRow({
   subscriber,
   disabled,
   onChange,
+  onEdit,
+  onCancel,
 }: {
   subscriber: DeliverySubscriber
   disabled: boolean
   onChange: (status: DeliveryStatus) => void
+  onEdit: () => void
+  onCancel: () => void
 }) {
+  const canceled = subscriber.status === 'canceled'
   return (
     <div className="bg-brand-input rounded-2xl border border-white/10 px-5 py-4 shadow-lg">
       <div className="flex items-start justify-between gap-4">
         <div className="min-w-0">
-          <p className="truncate text-base font-semibold text-white">{subscriber.name}</p>
+          <div className="flex items-center gap-2">
+            <p className="truncate text-base font-semibold text-white">{subscriber.name}</p>
+            {canceled && (
+              <span className="shrink-0 rounded-full border border-red-500/30 bg-red-500/10 px-2 py-0.5 text-[9px] font-bold tracking-wide text-red-400 uppercase">
+                Cancelado
+              </span>
+            )}
+          </div>
           <p className="text-xs text-gray-500">Mensalmente</p>
         </div>
         <div className="shrink-0">
@@ -48,9 +66,29 @@ function DeliveryRow({
       </div>
 
       <div className="mt-3 border-t border-white/5 pt-3">
-        <p className="mb-1 text-[10px] font-medium tracking-widest text-gray-500 uppercase">
-          Endereço de entrega
-        </p>
+        <div className="mb-1 flex items-center justify-between gap-2">
+          <p className="text-[10px] font-medium tracking-widest text-gray-500 uppercase">
+            Endereço de entrega
+          </p>
+          <div className="flex shrink-0 items-center gap-1">
+            <button
+              type="button"
+              onClick={onEdit}
+              className="rounded-md px-2 py-0.5 text-[11px] font-medium text-gray-400 transition-colors hover:bg-white/5 hover:text-white"
+            >
+              Editar
+            </button>
+            {!canceled && (
+              <button
+                type="button"
+                onClick={onCancel}
+                className="rounded-md px-2 py-0.5 text-[11px] font-medium text-red-400/80 transition-colors hover:bg-red-500/10 hover:text-red-400"
+              >
+                Cancelar
+              </button>
+            )}
+          </div>
+        </div>
         <p className="text-brand-blue text-sm leading-snug">
           {subscriber.address}
           {subscriber.complement ? ` — ${subscriber.complement}` : ''}
@@ -65,6 +103,7 @@ export function ManageSubscription() {
   const { id } = useParams<{ id: string }>()
   const navigate = useNavigate()
   const [offset, setOffset] = useState(0)
+  const [editing, setEditing] = useState<DeliverySubscriber | null>(null)
 
   const { data: subscription, isPending, isError } = useQuery({
     queryKey: ['subscriptions', id],
@@ -130,6 +169,34 @@ export function ManageSubscription() {
     const slug =
       subscription.name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '') || 'plano'
     downloadTextFile(`entregas-${slug}-${deliveries.period.start.slice(0, 7)}.csv`, csv)
+  }
+
+  const updateMutation = useMutation({
+    mutationFn: (vars: { subscriberId: string; values: UpdateSubscriberRequest }) =>
+      updateSubscriber(id!, vars.subscriberId, vars.values),
+    onSuccess: async () => {
+      setEditing(null)
+      await queryClient.invalidateQueries({ queryKey: ['subscriptions', id, 'deliveries', offset] })
+    },
+  })
+  const updateError = updateMutation.isError
+    ? getApiErrorMessage(updateMutation.error, 'Erro ao salvar.')
+    : null
+
+  const cancelSubscriberMutation = useMutation({
+    mutationFn: (subscriberId: string) => cancelSubscriber(id!, subscriberId),
+    onSuccess: () =>
+      queryClient.invalidateQueries({ queryKey: ['subscriptions', id, 'deliveries', offset] }),
+  })
+
+  const handleEdit = (s: DeliverySubscriber) => {
+    updateMutation.reset() // drop any stale error from a previous edit
+    setEditing(s)
+  }
+
+  const handleCancelSubscriber = (s: DeliverySubscriber) => {
+    if (!window.confirm(`Cancelar o assinante ${s.name}? Ele deixará de receber novas entregas.`)) return
+    cancelSubscriberMutation.mutate(s.id)
   }
 
   const cancelMutation = useMutation({
@@ -292,6 +359,8 @@ export function ManageSubscription() {
                   status,
                 })
               }
+              onEdit={() => handleEdit(s)}
+              onCancel={() => handleCancelSubscriber(s)}
             />
           ))
         ) : (
@@ -314,6 +383,23 @@ export function ManageSubscription() {
         <p className="mt-2 text-center text-xs text-gray-500">
           Conclua as entregas dos assinantes ativos para poder excluir esta assinatura.
         </p>
+      )}
+
+      {editing && (
+        <SubscriberEditModal
+          subscriberName={editing.name}
+          initial={{
+            name: editing.name,
+            phone: editing.phone,
+            address: editing.address,
+            cep: editing.cep,
+            complement: editing.complement,
+          }}
+          isPending={updateMutation.isPending}
+          serverError={updateError}
+          onSubmit={(values) => updateMutation.mutate({ subscriberId: editing.id, values })}
+          onClose={() => setEditing(null)}
+        />
       )}
     </div>
   )

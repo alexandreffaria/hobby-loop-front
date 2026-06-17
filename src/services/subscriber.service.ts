@@ -68,3 +68,35 @@ export const listSubscribers = (subscriptionId: string): Promise<Subscriber[]> =
   api
     .get<{ data: Subscriber[] }>(`/api/v1/subscriptions/${subscriptionId}/subscribers`)
     .then((r) => r.data.data)
+
+export interface UpdateSubscriberRequest {
+  name: string
+  phone: string
+  address: string
+  cep: string
+  complement: string
+}
+
+// Owner-side edit of a subscriber's contact/delivery details (not email).
+export const updateSubscriber = (
+  subscriptionId: string,
+  subscriberId: string,
+  body: UpdateSubscriberRequest,
+): Promise<Subscriber> =>
+  api
+    .patch<{ data: Subscriber }>(
+      `/api/v1/subscriptions/${subscriptionId}/subscribers/${subscriberId}`,
+      body,
+    )
+    .then((r) => r.data.data)
+
+// Owner-side cancel of a single subscriber (marks canceled, keeps the record).
+export const cancelSubscriber = (
+  subscriptionId: string,
+  subscriberId: string,
+): Promise<Subscriber> =>
+  api
+    .post<{ data: Subscriber }>(
+      `/api/v1/subscriptions/${subscriptionId}/subscribers/${subscriberId}/cancel`,
+    )
+    .then((r) => r.data.data)
