@@ -53,3 +53,23 @@ export const setDeliveryStatus = ({
       status,
     })
     .then(() => undefined)
+
+export interface BulkSetDeliveryStatusVars {
+  subscriptionId: string
+  periodStart: string
+  status: DeliveryStatus
+}
+
+// Advances every active subscriber in the period to `status` (forward-only on
+// the server). Returns how many delivery records changed.
+export const bulkSetDeliveryStatus = ({
+  subscriptionId,
+  periodStart,
+  status,
+}: BulkSetDeliveryStatusVars): Promise<{ affected: number }> =>
+  api
+    .post<{ data: { affected: number } }>(`/api/v1/subscriptions/${subscriptionId}/deliveries/bulk`, {
+      period_start: periodStart,
+      status,
+    })
+    .then((r) => r.data.data)

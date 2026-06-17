@@ -13,6 +13,7 @@ interface PlanCardProps {
   description: string
   priceCents: number
   activeSubscribers: number
+  archived?: boolean
   onEdit: () => void
   onManage: () => void
 }
@@ -41,6 +42,7 @@ export function PlanCard({
   description,
   priceCents,
   activeSubscribers,
+  archived = false,
   onEdit,
   onManage,
 }: PlanCardProps) {
@@ -72,6 +74,12 @@ export function PlanCard({
           </svg>
           {activeSubscribers}
         </span>
+
+        {archived && (
+          <span className="absolute top-3 left-1/2 z-10 -translate-x-1/2 rounded-full bg-amber-500/90 px-2 py-0.5 text-[10px] font-bold tracking-wide text-gray-900 uppercase shadow-md">
+            Encerrada
+          </span>
+        )}
 
         {/* Edit button — revealed on card hover or keyboard focus, so it is
             never an invisible tab stop */}
@@ -122,26 +130,37 @@ export function PlanCard({
             </p>
           </div>
 
-          {/* Scannable link to the public subscribe page */}
-          <div className="mt-3">
-            <QRCodeSVG value={buildPublicLink(id)} size={64} marginSize={1} />
-          </div>
+          {/* Scannable link to the public subscribe page — gone once the plan
+              is closed, since the public link no longer resolves */}
+          {archived ? (
+            <p className="mt-3 text-[10px] font-semibold tracking-wide text-gray-400 uppercase">
+              Plano encerrado
+            </p>
+          ) : (
+            <div className="mt-3">
+              <QRCodeSVG value={buildPublicLink(id)} size={64} marginSize={1} />
+            </div>
+          )}
         </div>
 
         {/* Link footer */}
-        <p className="text-brand-blue px-4 py-3 text-center font-mono text-[9px] truncate">
-          {displayPublicLink(id)}
-        </p>
+        {!archived && (
+          <p className="text-brand-blue px-4 py-3 text-center font-mono text-[9px] truncate">
+            {displayPublicLink(id)}
+          </p>
+        )}
       </div>
 
-      {/* Share button */}
-      <Link
-        to={`/banner/${id}`}
-        className="flex w-full items-center justify-center gap-1.5 rounded-full bg-blue-600 py-2 text-xs font-bold text-white shadow-lg transition-all duration-150 hover:bg-blue-700 active:scale-95"
-      >
-        Compartilhar
-        <span aria-hidden="true">✈</span>
-      </Link>
+      {/* Share button — only while the plan accepts new subscribers */}
+      {!archived && (
+        <Link
+          to={`/banner/${id}`}
+          className="flex w-full items-center justify-center gap-1.5 rounded-full bg-blue-600 py-2 text-xs font-bold text-white shadow-lg transition-all duration-150 hover:bg-blue-700 active:scale-95"
+        >
+          Compartilhar
+          <span aria-hidden="true">✈</span>
+        </Link>
+      )}
     </div>
   )
 }

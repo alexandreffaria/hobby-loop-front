@@ -13,6 +13,7 @@ export interface Subscription {
   products: ProductRef[]
   active_subscribers: number
   created_at: string
+  archived: boolean
 }
 
 export interface CreateSubscriptionRequest {
@@ -36,5 +37,15 @@ export const getSubscription = (id: string): Promise<Subscription> =>
 export const updateSubscription = (id: string, body: UpdateSubscriptionRequest): Promise<Subscription> =>
   api.patch<{ data: Subscription }>(`/api/v1/subscriptions/${id}`, body).then((r) => r.data.data)
 
-export const deleteSubscription = (id: string): Promise<void> =>
-  api.delete(`/api/v1/subscriptions/${id}`)
+export interface CancelSubscriptionResult {
+  deleted: boolean
+  archived: boolean
+}
+
+// Cancel a plan: the backend hard-deletes it when there are no active
+// subscribers, or archives it (closed to new signups, still manageable) when
+// there are.
+export const cancelSubscription = (id: string): Promise<CancelSubscriptionResult> =>
+  api
+    .post<{ data: CancelSubscriptionResult }>(`/api/v1/subscriptions/${id}/cancel`)
+    .then((r) => r.data.data)

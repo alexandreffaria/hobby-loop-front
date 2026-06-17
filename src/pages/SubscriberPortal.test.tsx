@@ -33,6 +33,7 @@ const portal: SubscriberPortalData = {
     products: [{ id: 'p1', name: 'Desodorante' }],
     active_subscribers: 1,
     created_at: '2026-01-01T00:00:00Z',
+    archived: false,
   },
 }
 
