@@ -14,13 +14,26 @@ export function TopBar() {
   return (
     <header className="sticky top-0 z-50 border-b border-white/5 bg-brand-bg/80 backdrop-blur-sm">
       <div className="mx-auto flex max-w-5xl items-center justify-between px-4 py-3 sm:px-6 lg:px-8">
-        <Link
-          to="/subscriptions"
-          className="flex items-center gap-2 transition-opacity hover:opacity-80"
-        >
-          <div className="from-brand-pink to-brand-blue h-6 w-6 rounded-full bg-linear-to-tr shadow" />
-          <span className="text-xs font-bold tracking-widest text-white/70 uppercase">HobbyLoop</span>
-        </Link>
+        <div className="flex items-center gap-5">
+          <Link to="/" className="flex items-center gap-2 transition-opacity hover:opacity-80">
+            <div className="from-brand-pink to-brand-blue h-6 w-6 rounded-full bg-linear-to-tr shadow" />
+            <span className="text-xs font-bold tracking-widest text-white/70 uppercase">HobbyLoop</span>
+          </Link>
+          <nav className="flex items-center gap-1">
+            <Link
+              to="/"
+              className="rounded-lg px-3 py-1.5 text-xs font-medium text-gray-400 transition-colors hover:bg-white/5 hover:text-white"
+            >
+              Início
+            </Link>
+            <Link
+              to="/subscriptions"
+              className="rounded-lg px-3 py-1.5 text-xs font-medium text-gray-400 transition-colors hover:bg-white/5 hover:text-white"
+            >
+              Planos
+            </Link>
+          </nav>
+        </div>
         <button
           onClick={handleLogout}
           className="rounded-lg px-3 py-1.5 text-xs font-medium text-gray-400 transition-colors hover:bg-white/5 hover:text-white"

@@ -1,4 +1,4 @@
-import { Navigate, createBrowserRouter, RouterProvider } from 'react-router-dom'
+import { createBrowserRouter, RouterProvider } from 'react-router-dom'
 import { AuthLayout } from './layouts/AuthLayout'
 import { DarkLayout } from './layouts/DarkLayout'
 import { PublicLayout } from './layouts/PublicLayout'
@@ -6,6 +6,7 @@ import { ProtectedRoute } from './components/ProtectedRoute'
 import { Register } from './pages/Register'
 import { Login } from './pages/Login'
 import { Subscriptions } from './pages/Subscriptions'
+import { Dashboard } from './pages/Dashboard'
 import { CreateSubscription } from './pages/CreateSubscription'
 import { PaymentDetails } from './pages/PaymentDetails'
 import { MySubscriptions } from './pages/MySubscription'
@@ -32,11 +33,6 @@ const router = createBrowserRouter([
     ErrorBoundary: ErrorBoundary,
     HydrateFallback: HydrateFallback,
     children: [
-      {
-        path: '/',
-        element: <Navigate to="/login" replace />,
-      },
-
       // Auth pages — centered card layout, no authentication required
       {
         element: <AuthLayout />,
@@ -71,6 +67,7 @@ const router = createBrowserRouter([
           {
             element: <DarkLayout />,
             children: [
+              { index: true, element: <Dashboard /> },
               { path: '/subscriptions', element: <Subscriptions /> },
               { path: '/subscriptions/new', element: <CreateSubscription /> },
               { path: '/payment', element: <PaymentDetails /> },
